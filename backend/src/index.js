@@ -20,18 +20,36 @@ app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 // ── Articles API ──────────────────────────────────────────────────────────────
 app.use('/api/articles', articlesRouter);
 
-// ── Manual ingestion trigger (local testing only) ────────────────────────────
-// POST /api/trigger-fetch
-// Runs the full RSS ingestion pipeline and returns a summary of what happened.
-// Example: curl -X POST http://localhost:3001/api/trigger-fetch
+// ── Manual ingestion trigger ──────────────────────────────────────────────────
+// POST /api/trigger-fetch  (local dev)
 app.post('/api/trigger-fetch', async (_req, res) => {
   console.log('[trigger] Manual fetch initiated');
   try {
     const summary = await fetchAndParseFeeds();
     res.json({ ok: true, summary });
   } catch (err) {
-    // Only unrecoverable errors (e.g. DB init failure) reach here
     console.error('[trigger] Unrecoverable error during fetch:', err.message);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// ── Cron trigger endpoint ─────────────────────────────────────────────────────
+// GET /api/cron/fetch
+// Called externally every hour by Railway cron or an uptime monitor.
+// In production the request must include:  Authorization: Bearer <CRON_SECRET>
+app.get('/api/cron/fetch', async (req, res) => {
+  if (env.NODE_ENV === 'production' && env.CRON_SECRET) {
+    const auth = req.headers['authorization'];
+    if (auth !== `Bearer ${env.CRON_SECRET}`) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+  }
+  console.log('[cron-http] External trigger received');
+  try {
+    const summary = await fetchAndParseFeeds();
+    res.json({ ok: true, summary });
+  } catch (err) {
+    console.error('[cron-http] Fetch failed —', err.message);
     res.status(500).json({ ok: false, error: err.message });
   }
 });

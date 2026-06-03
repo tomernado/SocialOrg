@@ -9,6 +9,8 @@ const schema = z.object({
   // Required from Phase 3 onwards — get a free key at https://aistudio.google.com/app/apikey
   GEMINI_API_KEY: z.string().min(1, 'GEMINI_API_KEY is required — get a free key at https://aistudio.google.com/app/apikey'),
   FRONTEND_URL: z.string().url('FRONTEND_URL must be a valid URL (e.g. http://localhost:5173)').default('http://localhost:5173'),
+  // Guards /api/cron/fetch in production. Optional locally.
+  CRON_SECRET: z.string().min(8).optional(),
 });
 
 const result = schema.safeParse(process.env);
