@@ -29,16 +29,17 @@ export default function ArticleCardCompact({ article }) {
     <>
       <button
         onClick={() => setModalOpen(true)}
-        className="flex items-center gap-3 min-w-[280px] h-20 bg-[#141416] border border-[#222228]
-                   rounded-xl overflow-hidden hover:border-[#333340] hover:bg-[#161618]
-                   transition-all duration-200 text-left flex-shrink-0 px-3"
+        className="flex items-center gap-3 w-[260px] h-[120px] bg-[#141416] border border-[#222228]
+                   rounded-xl overflow-hidden hover:border-[#333340] hover:bg-[#18181b]
+                   transition-all duration-200 text-left flex-shrink-0 px-3 group"
       >
         {/* Thumbnail */}
         <div
-          className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center"
-          style={{ background: showFallback
-            ? `radial-gradient(ellipse at center, ${accent.color}30 0%, ${accent.bg} 100%)`
-            : undefined
+          className="w-[72px] h-[72px] rounded-lg overflow-hidden flex-shrink-0"
+          style={{
+            background: showFallback
+              ? `radial-gradient(ellipse at center, ${accent.color}35 0%, ${accent.bg} 100%)`
+              : undefined,
           }}
         >
           {!showFallback && (
@@ -52,15 +53,16 @@ export default function ArticleCardCompact({ article }) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+        <div className="flex-1 min-w-0 flex flex-col gap-0.5 overflow-hidden">
           <span
-            className="text-[10px] font-bold tracking-wide font-body"
+            className="text-[9.5px] font-bold tracking-wide font-body truncate"
             style={{ color: accent.color }}
           >
             {source_name}
           </span>
           <p
-            className="text-[12.5px] font-bold text-white font-display leading-snug"
+            className="text-[12.5px] font-bold text-white font-display leading-[1.3]
+                       group-hover:text-[#e8e8f0] transition-colors duration-150"
             style={{
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -72,8 +74,8 @@ export default function ArticleCardCompact({ article }) {
           </p>
           {tag && (
             <span
-              className="text-[10px] font-medium font-body"
-              style={{ color: `${accent.color}99` }}
+              className="text-[9px] font-medium font-body truncate"
+              style={{ color: `${accent.color}88` }}
             >
               {tag}
             </span>

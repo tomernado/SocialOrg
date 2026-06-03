@@ -4,6 +4,7 @@ import { fetchAndParseFeeds } from './services/rss.service.js';
 import express from 'express';
 import cors from 'cors';
 import articlesRouter from './routes/articles.js';
+import cron from 'node-cron';
 
 // Initialise DB at startup so schema errors surface before any request arrives
 getDb();
@@ -35,7 +36,27 @@ app.post('/api/trigger-fetch', async (_req, res) => {
   }
 });
 
+async function runScheduledFetch() {
+  const now = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+  console.log(`[cron]  ⟳ Hourly fetch started at ${now}…`);
+  try {
+    const summary = await fetchAndParseFeeds();
+    console.log(
+      `[cron]  ✓ Fetch complete — processed=${summary.processed} skipped=${summary.skipped} errors=${summary.errors}`
+    );
+  } catch (err) {
+    console.error('[cron]  ✗ Fetch failed —', err.message);
+  }
+}
+
 // ── Start ─────────────────────────────────────────────────────────────────────
 app.listen(env.PORT, () => {
   console.log(`[server] Backend running → http://localhost:${env.PORT}`);
+
+  // Cron: top of every hour  (0 * * * *)
+  cron.schedule('0 * * * *', runScheduledFetch);
+  console.log('[cron]  ✓ Scheduled — runs at the top of every hour (0 * * * *)');
+
+  // Also run once immediately on startup to populate the DB right away
+  runScheduledFetch();
 });

@@ -50,6 +50,54 @@ Full governance rules documented in `ai-rules.md`. Key constraints in effect fro
 
 ---
 
+### [2026-06-03] UI Architecture: Main Category + Sub-Category navigation
+**Type**: Decision  
+**Status**: Active
+
+**What:** Moved from a single-level category navigation to a two-level "Main Category + Sub-Category" system.
+
+**Architecture:**
+- **Sidebar** (left): static main categories (AI & Tech, Sports, Football, Entertainment, Global News)
+- **SubNavbar** (horizontal strip, below main header): dynamic sub-category pills fetched live from the DB
+- Active sub-category is highlighted; "הכל" pill always appears first to show all sub-categories
+
+**Why it's dynamic:** Sub-categories come from `GET /api/articles/sub-categories?category=X` which queries `DISTINCT sub_category` from the DB. Adding a new RSS feed with a new sub_category (e.g. "קופה דל ריי") automatically makes it appear in the SubNavbar — no frontend code changes required.
+
+**New backend routes:**
+- `GET /api/articles/sub-categories?category=X` → `{ data: ["ברצלונה", "כדורסל", ...] }`
+- `GET /api/articles?category=X&sub_category=Y` → filtered article list
+
+**How to apply:** When adding new feeds to `rss.service.js`, ensure the `sub_category` field in the AI prompt maps to the intended grouping (e.g. all Barcelona-related feeds should produce `sub_category: "ברצלונה"`).
+
+---
+
+### [2026-06-03] Gemini model selection — ALWAYS use gemini-2.0-flash-lite
+**Type**: Constraint  
+**Status**: Active  
+**Supersedes:** the gemini-2.5-flash-lite choice from Phase 3 initialisation
+
+**Rule:** Use `gemini-2.0-flash-lite` as the model. Never use `gemini-2.5-flash-lite`.
+
+**Why:** `gemini-2.5-flash-lite` has a free-tier cap of only **20 Requests Per Day** (RPD). A single test run of 15 articles exhausts the entire daily quota. `gemini-2.0-flash-lite` has **1,500 RPD** on the free tier — sufficient for full production runs.
+
+Confirmed quota error message: `quotaId: "GenerateRequestsPerDayPerProjectPerModel-FreeTier", quotaValue: "20"`.
+
+**How to apply:** If model is changed for any reason, verify the RPD cap before committing. The RPM limit (15 RPM) is shared — keep the 5 s delay.
+
+---
+
+### [2026-06-03] Gemini free-tier rate limit — MUST use 5 s delay
+**Type**: Constraint  
+**Status**: Active
+
+**Rule:** `GEMINI_DELAY_MS` in `rss.service.js` MUST be set to `5_000` (5 seconds) or higher. Never set it below 4 seconds.
+
+**Why:** Gemini Flash-Lite free tier allows 15 RPM. At 3.5 s delay (≈17 RPM) we consistently hit 429 Too Many Requests, causing all articles to error. At 5 s (12 RPM) we have a comfortable 3 RPM safety margin that survives minor API jitter.
+
+**How to apply:** Any change to `GEMINI_DELAY_MS` requires updating this entry. If rate errors reappear in logs, increase the delay — do not retry failed calls in a loop.
+
+---
+
 ### [2026-06-01] Phase 2 — RSS ingestion pipeline implemented
 **Type**: Decision  
 **Status**: Active

@@ -6,21 +6,29 @@ export function initSchema(db) {
   db.exec(`
     CREATE TABLE IF NOT EXISTS articles (
       id            TEXT PRIMARY KEY,
-      original_url  TEXT NOT NULL UNIQUE,   -- Idempotency key: never store duplicates
+      original_url  TEXT NOT NULL UNIQUE,
       title         TEXT NOT NULL,
-      image_url     TEXT,                   -- nullable; frontend must handle missing images
+      image_url     TEXT,
       category      TEXT NOT NULL DEFAULT 'Uncategorised',
       sub_category  TEXT NOT NULL DEFAULT 'Uncategorised',
+      source_name   TEXT NOT NULL DEFAULT '',
       tag           TEXT NOT NULL DEFAULT 'General',
-      relevance_score INTEGER NOT NULL DEFAULT 0,  -- 0–100; set by LLM in Phase 3
-      ai_summary    TEXT NOT NULL DEFAULT '',      -- set by LLM in Phase 3; [RAW] prefix in Phase 2
+      relevance_score INTEGER NOT NULL DEFAULT 0,
+      ai_summary    TEXT NOT NULL DEFAULT '',
       created_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
     );
 
-    -- Speeds up the FIFO trim query (DELETE oldest N rows per sub_category)
     CREATE INDEX IF NOT EXISTS idx_articles_sub_category_created
       ON articles (sub_category, created_at);
   `);
+
+  // Migrate existing tables that predate the source_name column.
+  // SQLite has no "ADD COLUMN IF NOT EXISTS" — try-catch is the idiomatic approach.
+  try {
+    db.exec(`ALTER TABLE articles ADD COLUMN source_name TEXT NOT NULL DEFAULT ''`);
+  } catch {
+    // Column already exists — safe to ignore
+  }
 }
 
 /**
@@ -35,9 +43,9 @@ export function initSchema(db) {
 export function insertArticle(db, article) {
   const stmt = db.prepare(`
     INSERT OR IGNORE INTO articles
-      (id, original_url, title, image_url, category, sub_category, tag, relevance_score, ai_summary)
+      (id, original_url, title, image_url, category, sub_category, source_name, tag, relevance_score, ai_summary)
     VALUES
-      (@id, @original_url, @title, @image_url, @category, @sub_category, @tag, @relevance_score, @ai_summary)
+      (@id, @original_url, @title, @image_url, @category, @sub_category, @source_name, @tag, @relevance_score, @ai_summary)
   `);
 
   const result = stmt.run(article);
@@ -45,18 +53,20 @@ export function insertArticle(db, article) {
 }
 
 /**
- * FIFO trim: if a sub_category has more than 20 rows, delete the oldest (lowest created_at).
- * Call this AFTER every successful insert.
+ * FIFO trim: caps at 20 articles per (sub_category + source_name) pair.
+ * Each source gets its own 20-slot queue — one high-volume source (e.g. BBC)
+ * can no longer push out articles from a smaller source (e.g. Fabrizio Romano).
  *
  * @param {import('better-sqlite3').Database} db
  * @param {string} subCategory
+ * @param {string} sourceName
  */
-export function trimSubCategory(db, subCategory) {
-  const MAX = 20;
+export function trimSubCategory(db, subCategory, sourceName) {
+  const MAX = 10;
 
   const count = db
-    .prepare(`SELECT COUNT(*) as n FROM articles WHERE sub_category = ?`)
-    .get(subCategory).n;
+    .prepare(`SELECT COUNT(*) as n FROM articles WHERE sub_category = ? AND source_name = ?`)
+    .get(subCategory, sourceName).n;
 
   if (count <= MAX) return;
 
@@ -65,11 +75,11 @@ export function trimSubCategory(db, subCategory) {
     DELETE FROM articles
     WHERE id IN (
       SELECT id FROM articles
-      WHERE sub_category = ?
+      WHERE sub_category = ? AND source_name = ?
       ORDER BY created_at ASC
       LIMIT ?
     )
-  `).run(subCategory, excess);
+  `).run(subCategory, sourceName, excess);
 }
 
 /**

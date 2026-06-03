@@ -11,6 +11,44 @@ const CATEGORIES = [
   { label: 'Global News',   hebrewKey: 'חדשות כלליות בעולם',        accent: '#a78bfa' },
 ];
 
+// Card width (260) + gap (12) = 272px per slot — used to compute marquee duration.
+const CARD_SLOT_PX = 272;
+const SCROLL_SPEED_PX_PER_SEC = 45;
+
+/**
+ * CSS-animation marquee strip. Duplicates articles for a seamless loop.
+ * Pauses on hover/focus via the `.marquee-track` CSS rule in index.css.
+ */
+function MarqueeStrip({ articles }) {
+  const canScroll = articles.length >= 3;
+  const items = canScroll ? [...articles, ...articles] : articles;
+
+  // Duration = how long to traverse one full copy of the content
+  const duration = canScroll
+    ? Math.round((articles.length * CARD_SLOT_PX) / SCROLL_SPEED_PX_PER_SEC)
+    : 0;
+
+  return (
+    <div className="overflow-hidden -mx-6 lg:-mx-8">
+      <div
+        className={canScroll ? 'marquee-track' : 'flex gap-3 px-6 lg:px-8'}
+        style={canScroll ? {
+          display: 'flex',
+          gap: '12px',
+          width: 'max-content',
+          paddingLeft: '24px',
+          paddingRight: '24px',
+          '--marquee-duration': `${duration}s`,
+        } : undefined}
+      >
+        {items.map((article, i) => (
+          <ArticleCardCompact key={`${article.id}-${i}`} article={article} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function HomeDashboard({ onSelect }) {
   const [sectionData, setSectionData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -20,7 +58,7 @@ export default function HomeDashboard({ onSelect }) {
       CATEGORIES.map((cat) =>
         fetch(`${API_BASE}/api/articles?category=${encodeURIComponent(cat.hebrewKey)}`)
           .then((r) => r.json())
-          .then((json) => ({ label: cat.label, articles: (json.data ?? []).slice(0, 6) }))
+          .then((json) => ({ label: cat.label, articles: (json.data ?? []).slice(0, 10) }))
           .catch(() => ({ label: cat.label, articles: [] }))
       )
     ).then((results) => {
@@ -33,15 +71,26 @@ export default function HomeDashboard({ onSelect }) {
 
   if (loading) {
     return (
-      <div className="flex-1 px-6 lg:px-8 py-8 space-y-10">
+      <div className="flex-1 px-6 lg:px-8 pt-12 pb-6">
+        {/* Hero skeleton */}
+        <div className="flex flex-col items-center text-center mb-12">
+          <div className="h-10 w-48 bg-[#1c1c20] rounded animate-pulse mb-3" />
+          <div className="h-4 w-56 bg-[#181818] rounded animate-pulse" />
+        </div>
         {CATEGORIES.map((cat) => (
-          <div key={cat.label} className="space-y-3">
-            <div className="h-5 w-32 bg-[#1c1c20] rounded animate-pulse" />
+          <div key={cat.label} className="mb-10">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-[3px] h-6 rounded-full bg-[#222228] animate-pulse" />
+                <div className="h-5 w-24 bg-[#1c1c20] rounded animate-pulse" />
+              </div>
+              <div className="h-8 w-20 bg-[#1c1c20] rounded-full animate-pulse" />
+            </div>
             <div className="flex gap-3 overflow-hidden">
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="min-w-[280px] h-20 bg-[#141416] rounded-xl animate-pulse border border-[#222228] flex-shrink-0"
+                  className="w-[260px] h-[120px] bg-[#141416] rounded-xl animate-pulse border border-[#1c1c20] flex-shrink-0"
                 />
               ))}
             </div>
@@ -52,50 +101,87 @@ export default function HomeDashboard({ onSelect }) {
   }
 
   return (
-    <div className="flex-1 px-6 lg:px-8 py-8 space-y-10 overflow-y-auto">
-      {/* Hero */}
-      <div>
-        <h1 className="font-display text-2xl font-bold text-white">SocialOrg</h1>
-        <p className="text-[13px] text-[#888893] font-body mt-0.5">
+    <div className="flex-1 pt-4 lg:pt-10 pb-6 overflow-y-auto">
+
+      {/* ── Hero — centred ── */}
+      <div className="flex flex-col items-center text-center mb-8 px-6 lg:px-8">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+          </span>
+          <span className="text-[10px] font-bold tracking-[0.18em] uppercase text-[#444450] font-body">
+            Live Feed
+          </span>
+        </div>
+        <h1 className="font-display text-[28px] lg:text-[36px] font-bold text-white leading-tight tracking-tight">
+          SocialOrg
+        </h1>
+        <p className="text-[14px] text-[#555560] font-body mt-2">
           Your personal AI news feed
         </p>
       </div>
 
-      {CATEGORIES.map((cat) => {
+      {/* ── Category sections ── */}
+      {CATEGORIES.map((cat, idx) => {
         const articles = sectionData[cat.label] ?? [];
+        const isLast = idx === CATEGORIES.length - 1;
+
         return (
-          <section key={cat.label}>
+          <div key={cat.label} className="mb-8">
+
             {/* Section header */}
-            <div className="flex items-center justify-between mb-3">
-              <h2
-                className="font-display text-[15px] font-bold"
-                style={{ color: cat.accent }}
-              >
-                {cat.label}
-              </h2>
+            <div className="flex items-center justify-between mb-4 px-6 lg:px-8">
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-[3px] h-6 rounded-full flex-shrink-0"
+                  style={{
+                    backgroundColor: cat.accent,
+                    boxShadow: `0 0 10px ${cat.accent}80`,
+                  }}
+                />
+                <h2 className="font-display text-[19px] font-bold text-white tracking-tight leading-none">
+                  {cat.label}
+                </h2>
+              </div>
+
               <button
                 onClick={() => onSelect(cat.label)}
-                className="flex items-center gap-1 text-[11.5px] font-medium font-body
-                           text-[#555560] hover:text-white transition-colors duration-150"
+                className="flex items-center gap-1.5 text-[11px] font-bold font-body
+                           px-4 py-1.5 rounded-full transition-all duration-200
+                           hover:scale-105 active:scale-95"
+                style={{
+                  color: '#0a0a0c',
+                  backgroundColor: cat.accent,
+                  boxShadow: `0 2px 14px ${cat.accent}50`,
+                }}
               >
-                ראה הכל
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                SEE ALL
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </button>
             </div>
 
-            {/* Scroll strip */}
+            {/* Marquee strip */}
             {articles.length === 0 ? (
-              <p className="text-[12px] text-[#444450] font-body">No articles yet.</p>
+              <p className="text-[12px] text-[#444450] font-body py-3 px-6 lg:px-8">
+                No articles yet.
+              </p>
             ) : (
-              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none -mx-6 lg:-mx-8 px-6 lg:px-8">
-                {articles.map((article) => (
-                  <ArticleCardCompact key={article.id} article={article} />
-                ))}
-              </div>
+              <MarqueeStrip articles={articles} />
             )}
-          </section>
+
+            {/* Gradient divider */}
+            {!isLast && (
+              <div
+                className="mt-8 h-px mx-6 lg:mx-8"
+                style={{
+                  background: `linear-gradient(to right, ${cat.accent}25, ${cat.accent}08 60%, transparent)`,
+                }}
+              />
+            )}
+          </div>
         );
       })}
     </div>
