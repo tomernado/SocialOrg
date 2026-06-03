@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: socialorg-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/index.js
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: GEMINI_API_KEY
+        sync: false        # You will paste this in the Render dashboard
+      - key: FRONTEND_URL
+        sync: false        # Set to your Vercel URL after frontend deploys
+      - key: CRON_SECRET
+        generateValue: true  # Render auto-generates a random secret
