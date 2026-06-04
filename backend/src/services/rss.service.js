@@ -319,6 +319,21 @@ function cleanTitle(raw) {
   return raw.replace(/<[^>]*>/g, '').trim();
 }
 
+/** Boilerplate strings produced by FetchRSS and similar scraper services. */
+const BOILERPLATE_RE = /feed generated|fetchrss|rss generated|powered by|subscribe to|click here to|this is a feed/i;
+
+/**
+ * Returns usable summary text for an RSS item.
+ * Falls back to the title if the content is boilerplate, too short, or missing.
+ */
+function extractSummary(item, title) {
+  const raw = (item.contentSnippet ?? item.content ?? item.summary ?? '').trim();
+  // Strip HTML tags from content fields
+  const text = raw.replace(/<[^>]*>/g, '').trim();
+  if (!text || text.length < 30 || BOILERPLATE_RE.test(text)) return title;
+  return text;
+}
+
 /** Trim whitespace/newlines that some feeds embed in URLs. */
 function cleanUrl(raw) {
   if (!raw || typeof raw !== 'string') return null;
@@ -426,6 +441,7 @@ export async function fetchAndParseFeeds() {
         }
 
         const rawContent = item.contentSnippet ?? item.content ?? item.summary ?? '';
+        const summary = extractSummary(item, title);
 
         if (!ENABLE_AI_AGENT) {
           // ── TURBO MODE: no Gemini, no delay, raw content saved instantly ──
@@ -439,7 +455,7 @@ export async function fetchAndParseFeeds() {
             source_name: feed.source_name ?? '',
             tag: feed.forceTag ?? '#חדשות',
             relevance_score: 10,
-            ai_summary: rawContent || title,
+            ai_summary: summary,
           };
           const inserted = insertArticle(db, article);
           if (inserted) {
@@ -485,7 +501,6 @@ export async function fetchAndParseFeeds() {
         // Any error in AI path: save raw content so the UI stays populated
         console.warn(`[ai]  ⚠ Error — saving raw fallback for "${title.slice(0, 45)}…" | ${err.message.slice(0, 80)}`);
         try {
-          const rawContent = item.contentSnippet ?? item.content ?? item.summary ?? '';
           const fallback = {
             id: randomUUID(),
             original_url: url,
@@ -496,7 +511,7 @@ export async function fetchAndParseFeeds() {
             source_name: feed.source_name ?? '',
             tag: feed.forceTag ?? '#חדשות',
             relevance_score: 0,
-            ai_summary: item.contentSnippet ?? item.summary ?? title,
+            ai_summary: extractSummary(item, title),
           };
           if (insertArticle(db, fallback)) {
             trimSubCategory(db, fallback.sub_category, fallback.source_name);
