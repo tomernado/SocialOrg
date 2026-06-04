@@ -2,7 +2,8 @@ import Parser from 'rss-parser';
 import { randomUUID } from 'crypto';
 import { getDb } from '../db/database.js';
 import { articleExists, insertArticle, trimSubCategory } from '../db/schema.js';
-import { categorizeArticle, QUOTA_ERROR_PREFIX } from './ai.service.js';
+import { categorizeArticle } from './ai.service.js';
+import { env } from '../config/env.js';
 
 // Request extra fields from rss-parser so enclosure + media tags are captured
 const parser = new Parser({
@@ -303,10 +304,11 @@ const RSS_FEEDS = [
 // DO NOT lower below 4 s (15 RPM) — see AGENT_MEMORY.md.
 const GEMINI_DELAY_MS = 5_000;
 
-// Master switch — set to true once Gemini quota resets.
-// false = Turbo Mode: skip Gemini + sleep, save raw content instantly.
-// true  = Production AI Agent: every article gets a real summary + score.
-const ENABLE_AI_AGENT = false;
+// Master switch — controlled via ENABLE_AI_AGENT env var.
+// Set to "true" in Render/Railway dashboard when Gemini quota resets — no redeploy needed.
+// "false" = Turbo Mode: skip Gemini + sleep, save raw content instantly.
+// "true"  = Production AI Agent: every article gets a real Gemini summary + score.
+const ENABLE_AI_AGENT = env.ENABLE_AI_AGENT === 'true';
 
 // ---------------------------------------------------------------------------
 // Helpers

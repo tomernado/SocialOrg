@@ -9,8 +9,11 @@ const schema = z.object({
   // Required from Phase 3 onwards — get a free key at https://aistudio.google.com/app/apikey
   GEMINI_API_KEY: z.string().min(1, 'GEMINI_API_KEY is required — get a free key at https://aistudio.google.com/app/apikey'),
   FRONTEND_URL: z.string().url('FRONTEND_URL must be a valid URL (e.g. http://localhost:5173)').default('http://localhost:5173'),
-  // Guards /api/cron/fetch in production. Optional locally.
+  // Guards /api/cron/fetch and /api/trigger-fetch in production. Optional locally.
   CRON_SECRET: z.string().min(8).optional(),
+  // Master AI toggle. Set to "true" in Render dashboard when Gemini quota resets.
+  // "false" = Turbo Mode (raw content, 0 tokens). "true" = Production AI (Gemini summaries).
+  ENABLE_AI_AGENT: z.enum(['true', 'false']).default('false'),
 });
 
 const result = schema.safeParse(process.env);

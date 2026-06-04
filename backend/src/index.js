@@ -20,9 +20,23 @@ app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 // ── Articles API ──────────────────────────────────────────────────────────────
 app.use('/api/articles', articlesRouter);
 
+// ── Auth helper — guards fetch endpoints in production ────────────────────────
+function requireSecret(req, res) {
+  if (env.NODE_ENV !== 'production') return false; // allow freely in dev
+  const auth = req.headers['authorization'];
+  if (!env.CRON_SECRET || auth !== `Bearer ${env.CRON_SECRET}`) {
+    res.status(401).json({ error: 'Unauthorized — set Authorization: Bearer <CRON_SECRET>' });
+    return true; // blocked
+  }
+  return false; // allowed
+}
+
 // ── Manual ingestion trigger ──────────────────────────────────────────────────
-// POST /api/trigger-fetch  (local dev)
-app.post('/api/trigger-fetch', async (_req, res) => {
+// POST /api/trigger-fetch
+// Local dev: no auth required.
+// Production: requires  Authorization: Bearer <CRON_SECRET>
+app.post('/api/trigger-fetch', async (req, res) => {
+  if (requireSecret(req, res)) return;
   console.log('[trigger] Manual fetch initiated');
   try {
     const summary = await fetchAndParseFeeds();
@@ -35,15 +49,10 @@ app.post('/api/trigger-fetch', async (_req, res) => {
 
 // ── Cron trigger endpoint ─────────────────────────────────────────────────────
 // GET /api/cron/fetch
-// Called externally every hour by Railway cron or an uptime monitor.
-// In production the request must include:  Authorization: Bearer <CRON_SECRET>
+// Called every hour by UptimeRobot or any external scheduler.
+// Production: requires  Authorization: Bearer <CRON_SECRET>
 app.get('/api/cron/fetch', async (req, res) => {
-  if (env.NODE_ENV === 'production' && env.CRON_SECRET) {
-    const auth = req.headers['authorization'];
-    if (auth !== `Bearer ${env.CRON_SECRET}`) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-  }
+  if (requireSecret(req, res)) return;
   console.log('[cron-http] External trigger received');
   try {
     const summary = await fetchAndParseFeeds();
