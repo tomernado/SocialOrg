@@ -11,7 +11,9 @@ getDb();
 
 const app = express();
 
-app.use(cors({ origin: env.FRONTEND_URL }));
+// Strip trailing slash so FRONTEND_URL with or without "/" both work
+const corsOrigin = env.FRONTEND_URL.replace(/\/$/, '');
+app.use(cors({ origin: corsOrigin }));
 app.use(express.json());
 
 // ── Health check ──────────────────────────────────────────────────────────────
