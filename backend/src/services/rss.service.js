@@ -407,6 +407,11 @@ export async function fetchAndParseFeeds() {
   const db = getDb();
   const result = { processed: 0, skipped: 0, errors: 0 };
 
+  // Per-run quota circuit-breaker. Declared inside this function so every
+  // invocation — whether from node-cron, /api/cron/fetch, or /api/trigger-fetch —
+  // starts fresh at false. Two concurrent callers each get their own flag.
+  let isQuotaExhausted = false;
+
   for (const feed of RSS_FEEDS) {
     let feedResult;
 
@@ -469,37 +474,78 @@ export async function fetchAndParseFeeds() {
 
         } else {
           // ── PRODUCTION AI AGENT: Gemini summary + score for every article ──
-          await sleep(GEMINI_DELAY_MS);
-          console.log(`[ai]  ⟳ Categorizing: "${title.slice(0, 60)}…"`);
-          const aiResult = await categorizeArticle(title, rawContent, feed.forceSubCategory ?? null);
 
-          const article = {
-            id: randomUUID(),
-            original_url: url,
-            title,
-            image_url: extractImage(item),
-            category: (feed.forceCategory && ENGLISH_TO_HEBREW_CATEGORY[feed.forceCategory])
-              ?? aiResult.category,
-            sub_category: aiResult.sub_category,
-            source_name: feed.source_name ?? '',
-            tag: feed.forceTag ?? aiResult.tag,
-            relevance_score: aiResult.relevance_score,
-            ai_summary: aiResult.ai_summary,
-          };
-          const inserted = insertArticle(db, article);
-          if (inserted) {
-            trimSubCategory(db, aiResult.sub_category, article.source_name);
-            result.processed++;
-            const imgMark = article.image_url ? '🖼' : '—';
-            console.log(`[db]  ✓ ${imgMark} [AI] "${title.slice(0, 45)}…" (score=${aiResult.relevance_score})`);
+          if (isQuotaExhausted) {
+            // Quota was already hit earlier this run — skip Gemini entirely, no delay.
+            // Saves instantly as Turbo so the UI stays populated.
+            const article = {
+              id: randomUUID(),
+              original_url: url,
+              title,
+              image_url: extractImage(item),
+              category: ENGLISH_TO_HEBREW_CATEGORY[feed.forceCategory] ?? feed.forceCategory,
+              sub_category: feed.forceSubCategory ?? 'GENERAL',
+              source_name: feed.source_name ?? '',
+              tag: feed.forceTag ?? '#חדשות',
+              relevance_score: 0,
+              ai_summary: extractSummary(item, title),
+            };
+            const inserted = insertArticle(db, article);
+            if (inserted) {
+              trimSubCategory(db, article.sub_category, article.source_name);
+              result.processed++;
+              const imgMark = article.image_url ? '🖼' : '—';
+              console.log(`[db]  ✓ ${imgMark} [QUOTA-TURBO] "${title.slice(0, 45)}…"`);
+            } else {
+              result.skipped++;
+            }
           } else {
-            result.skipped++;
+            await sleep(GEMINI_DELAY_MS);
+            console.log(`[ai]  ⟳ Categorizing: "${title.slice(0, 60)}…"`);
+            const aiResult = await categorizeArticle(title, rawContent, feed.forceSubCategory ?? null);
+
+            const article = {
+              id: randomUUID(),
+              original_url: url,
+              title,
+              image_url: extractImage(item),
+              category: (feed.forceCategory && ENGLISH_TO_HEBREW_CATEGORY[feed.forceCategory])
+                ?? aiResult.category,
+              sub_category: aiResult.sub_category,
+              source_name: feed.source_name ?? '',
+              tag: feed.forceTag ?? aiResult.tag,
+              relevance_score: aiResult.relevance_score,
+              ai_summary: aiResult.ai_summary,
+            };
+            const inserted = insertArticle(db, article);
+            if (inserted) {
+              trimSubCategory(db, aiResult.sub_category, article.source_name);
+              result.processed++;
+              const imgMark = article.image_url ? '🖼' : '—';
+              console.log(`[db]  ✓ ${imgMark} [AI] "${title.slice(0, 45)}…" (score=${aiResult.relevance_score})`);
+            } else {
+              result.skipped++;
+            }
           }
         }
 
       } catch (err) {
-        // Any error in AI path: save raw content so the UI stays populated
-        console.warn(`[ai]  ⚠ Error — saving raw fallback for "${title.slice(0, 45)}…" | ${err.message.slice(0, 80)}`);
+        // Detect quota exhaustion: flip the circuit-breaker so all remaining
+        // articles in this run skip Gemini entirely (no 5 s delay, no API call).
+        const isQuotaError =
+          err.message.startsWith('QUOTA_EXHAUSTED:') ||
+          err.message.includes('429') ||
+          err.message.toLowerCase().includes('quota');
+
+        if (isQuotaError && !isQuotaExhausted) {
+          isQuotaExhausted = true;
+          console.warn(
+            '[ai]  ⚡ QUOTA EXHAUSTED — switching ALL remaining articles to Turbo mode for this run. ' +
+            'Re-enable AI next hour when the quota resets.'
+          );
+        } else if (!isQuotaError) {
+          console.warn(`[ai]  ⚠ Error — saving raw fallback for "${title.slice(0, 45)}…" | ${err.message.slice(0, 80)}`);
+        }
         try {
           const fallback = {
             id: randomUUID(),
