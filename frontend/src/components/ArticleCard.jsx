@@ -2,6 +2,14 @@ import { useState } from 'react';
 import ArticleModal from './ArticleModal.jsx';
 
 export const SUB_CATEGORY_LABELS = {
+  // Football
+  'BARCELONA':        'ברצלונה',
+  'NATIONAL':         'נבחרות',
+  'FOOTBALL':         'כדורגל כללי',
+  // Football (legacy keys — kept so existing DB articles render correctly)
+  'TRANSFERS':        'העברות',
+  'NATIONAL-MONDIAL': 'נבחרות עולמיות',
+  'PREMIER-LEAGUE':   'ליגת העל',
   // Sports
   'WORLD-SPORTS':    'ספורט עולמי',
   'ISRAELI-SPORTS':  'ספורט ישראלי',
@@ -92,6 +100,22 @@ const CATEGORY_FALLBACK = {
   },
 };
 
+// Sub-category overrides — take priority over CATEGORY_FALLBACK when a more
+// specific visual exists (e.g. Barcelona crest instead of the generic football icon).
+const SUB_CATEGORY_FALLBACK = {
+  'BARCELONA': {
+    gradient: 'linear-gradient(135deg, #06001a 0%, #13003a 55%, #06001a 100%)',
+    glow: 'radial-gradient(ellipse at 35% 55%, #a5004440 0%, transparent 55%), radial-gradient(ellipse at 65% 40%, #00458840 0%, transparent 55%)',
+    icon: (
+      <img
+        src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/240px-FC_Barcelona_%28crest%29.svg.png"
+        alt="FC Barcelona"
+        style={{ width: '68px', height: '68px', objectFit: 'contain', opacity: 0.85 }}
+      />
+    ),
+  },
+};
+
 export default function ArticleCard({ article, index = 0 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -108,7 +132,7 @@ export default function ArticleCard({ article, index = 0 }) {
   } = article ?? {};
 
   const accent = CATEGORY_ACCENT[category] ?? DEFAULT_ACCENT;
-  const fallback = CATEGORY_FALLBACK[category] ?? null;
+  const fallback = SUB_CATEGORY_FALLBACK[sub_category] ?? CATEGORY_FALLBACK[category] ?? null;
 
   return (
     <article

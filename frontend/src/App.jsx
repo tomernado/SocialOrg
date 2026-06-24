@@ -56,7 +56,7 @@ export default function App() {
 
   // Hardcoded sub-category options — must match forceSubCategory values in rss.service.js
   const CATEGORY_SUB_OPTIONS = {
-    'Football':      ['BARCELONA', 'TRANSFERS', 'NATIONAL-MONDIAL', 'PREMIER-LEAGUE'],
+    'Football':      ['BARCELONA', 'NATIONAL', 'FOOTBALL'],
     'Sports':        ['WORLD-SPORTS', 'ISRAELI-SPORTS', 'BASKETBALL-NBA'],
     'AI & Tech':     ['AI-NEWS', 'GADGETS-LEAKS', 'CYBER-TECH'],
     'Entertainment': ['MUSIC', 'MOVIES-SERIES', 'CELEBS-REALITY', 'ISRAELI-ENTERTAINMENT'],
