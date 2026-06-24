@@ -29,6 +29,14 @@ export function initSchema(db) {
   } catch {
     // Column already exists — safe to ignore
   }
+
+  // Migrate renamed Football sub-categories. Idempotent: rows already migrated
+  // won't match the WHERE clause, so subsequent startups are a no-op.
+  db.exec(`
+    UPDATE articles SET sub_category = 'NATIONAL' WHERE sub_category = 'NATIONAL-MONDIAL';
+    UPDATE articles SET sub_category = 'FOOTBALL' WHERE sub_category = 'PREMIER-LEAGUE';
+    UPDATE articles SET sub_category = 'FOOTBALL' WHERE sub_category = 'TRANSFERS';
+  `);
 }
 
 /**

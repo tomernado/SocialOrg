@@ -108,9 +108,10 @@ const SUB_CATEGORY_FALLBACK = {
     glow: 'radial-gradient(ellipse at 35% 55%, #a5004440 0%, transparent 55%), radial-gradient(ellipse at 65% 40%, #00458840 0%, transparent 55%)',
     icon: (
       <img
-        src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/240px-FC_Barcelona_%28crest%29.svg.png"
+        src="https://crests.football-data.org/81.png"
         alt="FC Barcelona"
-        style={{ width: '68px', height: '68px', objectFit: 'contain', opacity: 0.85 }}
+        style={{ width: '72px', height: '72px', objectFit: 'contain', opacity: 0.9 }}
+        onError={(e) => { e.currentTarget.style.display = 'none'; }}
       />
     ),
   },
