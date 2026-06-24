@@ -120,52 +120,101 @@ const SUB_CATEGORY_FALLBACK = {
   // ── AI & Tech ───────────────────────────────────────────────────────────────
   'AI-NEWS': {
     gradient: 'linear-gradient(135deg, #020c18 0%, #031520 60%, #020d1c 100%)',
-    glow: 'radial-gradient(ellipse at 50% 50%, #00d4ff38 0%, transparent 60%)',
-    icon: (
-      <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
-        <circle cx="50" cy="50" r="12" fill="#00d4ff1e" stroke="#00d4ff" strokeWidth="2.5"/>
-        <circle cx="18" cy="26" r="6.5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="2" opacity="0.85"/>
-        <circle cx="82" cy="26" r="6.5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="2" opacity="0.85"/>
-        <circle cx="18" cy="74" r="6.5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="2" opacity="0.85"/>
-        <circle cx="82" cy="74" r="6.5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="2" opacity="0.85"/>
-        <circle cx="50" cy="12" r="5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="1.8" opacity="0.65"/>
-        <circle cx="50" cy="88" r="5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="1.8" opacity="0.65"/>
-        <line x1="24" y1="30" x2="42" y2="44" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
-        <line x1="76" y1="30" x2="58" y2="44" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
-        <line x1="24" y1="70" x2="42" y2="56" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
-        <line x1="76" y1="70" x2="58" y2="56" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
-        <line x1="50" y1="17" x2="50" y2="38" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
-        <line x1="50" y1="62" x2="50" y2="83" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
-      </svg>
+    glow: 'radial-gradient(ellipse at 50% 48%, #00d4ff22 0%, transparent 65%)',
+    scene: (
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 48%, #00d4ff22 0%, transparent 65%)' }}/>
+        <svg style={{ position: 'absolute', inset: 0 }} width="100%" height="100%" viewBox="0 0 400 176" preserveAspectRatio="xMidYMid slice" fill="none">
+          <circle cx="65" cy="35" r="11" fill="#00d4ff08" stroke="#00d4ff" strokeOpacity="0.45" strokeWidth="1.3"/>
+          <circle cx="335" cy="35" r="11" fill="#00d4ff08" stroke="#00d4ff" strokeOpacity="0.45" strokeWidth="1.3"/>
+          <circle cx="65" cy="141" r="11" fill="#00d4ff08" stroke="#00d4ff" strokeOpacity="0.45" strokeWidth="1.3"/>
+          <circle cx="335" cy="141" r="11" fill="#00d4ff08" stroke="#00d4ff" strokeOpacity="0.45" strokeWidth="1.3"/>
+          <circle cx="200" cy="12" r="8" fill="#00d4ff07" stroke="#00d4ff" strokeOpacity="0.35" strokeWidth="1"/>
+          <circle cx="200" cy="164" r="8" fill="#00d4ff07" stroke="#00d4ff" strokeOpacity="0.35" strokeWidth="1"/>
+          <circle cx="130" cy="55" r="7" fill="#00d4ff10" stroke="#00d4ff" strokeOpacity="0.4" strokeWidth="1"/>
+          <circle cx="270" cy="55" r="7" fill="#00d4ff10" stroke="#00d4ff" strokeOpacity="0.4" strokeWidth="1"/>
+          <circle cx="130" cy="121" r="7" fill="#00d4ff10" stroke="#00d4ff" strokeOpacity="0.4" strokeWidth="1"/>
+          <circle cx="270" cy="121" r="7" fill="#00d4ff10" stroke="#00d4ff" strokeOpacity="0.4" strokeWidth="1"/>
+          <line x1="74" y1="41" x2="125" y2="53" stroke="#00d4ff" strokeOpacity="0.22" strokeWidth="1"/>
+          <line x1="326" y1="41" x2="275" y2="53" stroke="#00d4ff" strokeOpacity="0.22" strokeWidth="1"/>
+          <line x1="74" y1="135" x2="125" y2="123" stroke="#00d4ff" strokeOpacity="0.22" strokeWidth="1"/>
+          <line x1="326" y1="135" x2="275" y2="123" stroke="#00d4ff" strokeOpacity="0.22" strokeWidth="1"/>
+          <line x1="200" y1="20" x2="200" y2="76" stroke="#00d4ff" strokeOpacity="0.22" strokeWidth="1"/>
+          <line x1="200" y1="156" x2="200" y2="100" stroke="#00d4ff" strokeOpacity="0.22" strokeWidth="1"/>
+          <line x1="135" y1="60" x2="182" y2="82" stroke="#00d4ff" strokeOpacity="0.3" strokeWidth="1.1"/>
+          <line x1="265" y1="60" x2="218" y2="82" stroke="#00d4ff" strokeOpacity="0.3" strokeWidth="1.1"/>
+          <line x1="135" y1="116" x2="182" y2="94" stroke="#00d4ff" strokeOpacity="0.3" strokeWidth="1.1"/>
+          <line x1="265" y1="116" x2="218" y2="94" stroke="#00d4ff" strokeOpacity="0.3" strokeWidth="1.1"/>
+          <circle cx="200" cy="88" r="24" fill="#00d4ff07" stroke="#00d4ff" strokeOpacity="0.55" strokeWidth="1.8"/>
+          <circle cx="200" cy="88" r="14" fill="#00d4ff12" stroke="#00d4ff" strokeOpacity="0.7" strokeWidth="1.2"/>
+          <circle cx="200" cy="88" r="5.5" fill="#00d4ff" fillOpacity="0.45"/>
+        </svg>
+      </div>
     ),
   },
   'GADGETS-LEAKS': {
     gradient: 'linear-gradient(135deg, #020c18 0%, #031a28 60%, #020d1c 100%)',
-    glow: 'radial-gradient(ellipse at 65% 35%, #00d4ff28 0%, transparent 60%)',
-    icon: (
-      <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
-        <rect x="5" y="2" width="14" height="20" rx="2.5" fill="#00d4ff10" stroke="#00d4ff" strokeWidth="1.4"/>
-        <rect x="8" y="5.5" width="8" height="11" rx="1" fill="#00d4ff1a" stroke="#00d4ff" strokeWidth="0.9"/>
-        <circle cx="12" cy="19" r="1.1" fill="#00d4ff" opacity="0.65"/>
-        <line x1="10" y1="3.8" x2="14" y2="3.8" stroke="#00d4ff" strokeWidth="1.3" strokeLinecap="round" opacity="0.55"/>
-        <line x1="9" y1="8"  x2="15" y2="8"  stroke="#00d4ff" strokeWidth="0.75" opacity="0.35"/>
-        <line x1="9" y1="10" x2="15" y2="10" stroke="#00d4ff" strokeWidth="0.75" opacity="0.35"/>
-        <line x1="9" y1="12" x2="13" y2="12" stroke="#00d4ff" strokeWidth="0.75" opacity="0.35"/>
-      </svg>
+    glow: 'radial-gradient(ellipse at 72% 15%, #00d4ff18 0%, transparent 45%)',
+    scene: (
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 72% 15%, #00d4ff1a 0%, transparent 45%), radial-gradient(ellipse at 30% 85%, #00d4ff0e 0%, transparent 40%)' }}/>
+        <svg style={{ position: 'absolute', inset: 0 }} width="100%" height="100%" viewBox="0 0 400 176" preserveAspectRatio="xMidYMid slice" fill="none">
+          <rect x="148" y="6" width="104" height="166" rx="16" fill="#00d4ff06" stroke="#00d4ff" strokeOpacity="0.4" strokeWidth="1.5"/>
+          <rect x="158" y="20" width="84" height="138" rx="8" fill="#00d4ff10" stroke="#00d4ff" strokeOpacity="0.18" strokeWidth="0.8"/>
+          <rect x="183" y="25" width="34" height="8" rx="4" fill="#00d4ff" fillOpacity="0.25"/>
+          <rect x="183" y="150" width="34" height="4" rx="2" fill="#00d4ff" fillOpacity="0.28"/>
+          <rect x="162" y="42" width="76" height="46" rx="5" fill="#00d4ff" fillOpacity="0.1"/>
+          <rect x="162" y="96" width="76" height="6" rx="3" fill="#00d4ff" fillOpacity="0.14"/>
+          <rect x="162" y="108" width="54" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.09"/>
+          <rect x="162" y="119" width="68" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.08"/>
+          <rect x="162" y="130" width="44" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.07"/>
+          <rect x="146" y="50" width="3" height="24" rx="1.5" fill="#00d4ff" fillOpacity="0.28"/>
+          <rect x="146" y="82" width="3" height="18" rx="1.5" fill="#00d4ff" fillOpacity="0.28"/>
+          <rect x="251" y="64" width="3" height="30" rx="1.5" fill="#00d4ff" fillOpacity="0.28"/>
+          <rect x="20" y="38" width="90" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.1"/>
+          <rect x="20" y="50" width="65" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.07"/>
+          <rect x="20" y="62" width="80" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.08"/>
+          <rect x="20" y="80" width="50" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.07"/>
+          <rect x="20" y="92" width="75" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.06"/>
+          <ellipse cx="355" cy="0" rx="110" ry="75" fill="#00d4ff" fillOpacity="0.05"/>
+        </svg>
+      </div>
     ),
   },
   'CYBER-TECH': {
     gradient: 'linear-gradient(135deg, #020c18 0%, #041e32 60%, #020c18 100%)',
-    glow: 'radial-gradient(ellipse at 35% 45%, #00d4ff2e 0%, transparent 58%), radial-gradient(ellipse at 72% 68%, #00d4ff14 0%, transparent 50%)',
-    icon: (
-      <svg width="62" height="62" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2L4 6v5c0 4.9 3.4 9.5 8 10.9 4.6-1.4 8-6 8-10.9V6L12 2z"
-              fill="#00d4ff14" stroke="#00d4ff" strokeWidth="1.35" strokeLinejoin="round"/>
-        <rect x="9.5" y="11.5" width="5" height="4.5" rx="0.9"
-              fill="#00d4ff1e" stroke="#00d4ff" strokeWidth="1.05"/>
-        <path d="M12 9a1.9 1.9 0 0 1 1.9 1.9V11.5H10.1V10.9A1.9 1.9 0 0 1 12 9z"
-              fill="#00d4ff10" stroke="#00d4ff" strokeWidth="1.05" strokeLinejoin="round"/>
-      </svg>
+    glow: 'radial-gradient(ellipse at 20% 78%, #00d4ff1c 0%, transparent 44%)',
+    scene: (
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 18% 78%, #00d4ff1c 0%, transparent 44%), radial-gradient(ellipse at 82% 22%, #00d4ff14 0%, transparent 42%)' }}/>
+        <svg style={{ position: 'absolute', inset: 0 }} width="100%" height="100%" viewBox="0 0 400 176" preserveAspectRatio="xMidYMid slice" fill="none">
+          <line x1="0" y1="44" x2="400" y2="44" stroke="#00d4ff" strokeWidth="0.6" strokeOpacity="0.12"/>
+          <line x1="0" y1="88" x2="400" y2="88" stroke="#00d4ff" strokeWidth="0.6" strokeOpacity="0.08"/>
+          <line x1="0" y1="132" x2="400" y2="132" stroke="#00d4ff" strokeWidth="0.6" strokeOpacity="0.12"/>
+          <line x1="80" y1="0" x2="80" y2="176" stroke="#00d4ff" strokeWidth="0.6" strokeOpacity="0.09"/>
+          <line x1="160" y1="0" x2="160" y2="176" stroke="#00d4ff" strokeWidth="0.6" strokeOpacity="0.09"/>
+          <line x1="240" y1="0" x2="240" y2="176" stroke="#00d4ff" strokeWidth="0.6" strokeOpacity="0.09"/>
+          <line x1="320" y1="0" x2="320" y2="176" stroke="#00d4ff" strokeWidth="0.6" strokeOpacity="0.09"/>
+          <circle cx="80" cy="44" r="4.5" fill="#00d4ff" fillOpacity="0.55"/>
+          <circle cx="80" cy="44" r="10" fill="#00d4ff" fillOpacity="0.12"/>
+          <circle cx="320" cy="132" r="3.5" fill="#00d4ff" fillOpacity="0.45"/>
+          <circle cx="320" cy="132" r="8" fill="#00d4ff" fillOpacity="0.1"/>
+          <circle cx="160" cy="88" r="2.5" fill="#00d4ff" fillOpacity="0.35"/>
+          <circle cx="240" cy="44" r="2" fill="#00d4ff" fillOpacity="0.28"/>
+          <circle cx="80" cy="132" r="2" fill="#00d4ff" fillOpacity="0.22"/>
+          <path d="M168 14L122 38v42c0 30 24 58 46 68 22-10 46-38 46-68V38L168 14z" fill="#00d4ff" fillOpacity="0.05" stroke="#00d4ff" strokeOpacity="0.32" strokeWidth="1.3"/>
+          <rect x="154" y="66" width="28" height="22" rx="3" fill="#00d4ff" fillOpacity="0.1" stroke="#00d4ff" strokeOpacity="0.45" strokeWidth="1.1"/>
+          <path d="M168 51a9 9 0 0 1 9 9v7h-18v-7a9 9 0 0 1 9-9z" fill="#00d4ff" fillOpacity="0.08" stroke="#00d4ff" strokeOpacity="0.45" strokeWidth="1.1"/>
+          <rect x="268" y="18" width="112" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.1"/>
+          <rect x="268" y="30" width="78" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.07"/>
+          <rect x="268" y="42" width="98" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.08"/>
+          <rect x="268" y="60" width="112" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.1"/>
+          <rect x="268" y="72" width="58" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.06"/>
+          <rect x="268" y="84" width="82" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.07"/>
+          <rect x="20" y="148" width="102" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.08"/>
+          <rect x="20" y="160" width="72" height="5" rx="2.5" fill="#00d4ff" fillOpacity="0.06"/>
+        </svg>
+      </div>
     ),
   },
 };
@@ -200,40 +249,48 @@ export default function ArticleCard({ article, index = 0 }) {
       onMouseLeave={e => { e.currentTarget.style.border = '1px solid var(--border)'; e.currentTarget.style.background = 'var(--card)'; }}
     >
       {/* ── Image / Fallback area ── */}
-      <div className="relative w-full h-44 overflow-hidden">
+      <div className="relative w-full h-48 overflow-hidden">
         {image_url && !imgError ? (
           <img
             src={image_url}
             alt={title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            style={{ objectPosition: 'center top' }}
             onError={() => setImgError(true)}
           />
         ) : (
         /* Fallback — shown when no image_url or image fails to load */
         <div
-          className="w-full h-full flex items-center justify-center"
+          className="w-full h-full relative overflow-hidden"
           style={{
             background: fallback
               ? `${fallback.glow}, ${fallback.gradient}`
               : `radial-gradient(ellipse at 30% 50%, ${accent.color}18 0%, transparent 60%), #0c0c0e`,
           }}
         >
-          {/* Subtle grid lines */}
+          {fallback?.scene ? (
+            /* Full-bleed scene — fills the entire image area, no centered icon */
+            <div className="absolute inset-0">{fallback.scene}</div>
+          ) : (
+            <>
+              {/* Subtle grid lines (legacy icon fallbacks) */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `linear-gradient(${accent.color}08 1px, transparent 1px),
+                                    linear-gradient(90deg, ${accent.color}08 1px, transparent 1px)`,
+                  backgroundSize: '28px 28px',
+                }}
+              />
+              {/* Centered icon */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-80">
+                {fallback?.icon ?? null}
+              </div>
+            </>
+          )}
+          {/* Bottom fade into card background */}
           <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `linear-gradient(${accent.color}08 1px, transparent 1px),
-                                linear-gradient(90deg, ${accent.color}08 1px, transparent 1px)`,
-              backgroundSize: '28px 28px',
-            }}
-          />
-          {/* Category icon */}
-          <div className="relative z-10 opacity-80">
-            {fallback?.icon ?? null}
-          </div>
-          {/* Bottom fade */}
-          <div
-            className="absolute bottom-0 left-0 right-0 h-12"
+            className="absolute bottom-0 left-0 right-0 h-14 z-10"
             style={{ background: 'linear-gradient(transparent, var(--card))' }}
           />
         </div>
