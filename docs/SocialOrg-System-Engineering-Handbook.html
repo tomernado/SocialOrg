@@ -45,7 +45,8 @@
     .page-wrap {
       display: flex;
       min-height: 100vh;
-      flex-direction: row-reverse;
+      /* RTL: items flow right→left — TOC (first in HTML) lands on the right,
+         main content fills the left. No empty right-side gap. */
     }
 
     /* ── Sidebar TOC ── */
@@ -57,9 +58,9 @@
       flex-shrink: 0;
       overflow-y: auto;
       background: var(--surface);
-      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);  /* right border → separates from content on left */
       padding: 32px 0 40px;
-      box-shadow: -2px 0 8px rgba(0,0,0,0.04);
+      box-shadow: 2px 0 8px rgba(0,0,0,0.04);
     }
 
     nav.toc .toc-logo {
@@ -96,13 +97,13 @@
       font-size: 13px;
       color: var(--text-2);
       text-decoration: none;
-      border-right: 2px solid transparent;
+      border-left: 2px solid transparent;
       transition: all 0.12s;
     }
 
     nav.toc a:hover {
       color: var(--accent);
-      border-right-color: var(--accent);
+      border-left-color: var(--accent);
       background: var(--accent-bg);
     }
 
@@ -125,9 +126,12 @@
     main {
       flex: 1;
       min-width: 0;
-      max-width: 860px;
-      padding: 56px 60px 100px;
+      /* No max-width — fills all space to the left of the TOC */
+      padding: 56px 64px 100px 80px;
     }
+
+    /* Cap readable line length on very wide screens */
+    main > * { max-width: 860px; }
 
     /* ── Hero ── */
     .hero {
@@ -575,6 +579,7 @@
     @media (max-width: 900px) {
       nav.toc { display: none; }
       main { padding: 40px 20px 80px; }
+      main > * { max-width: 100%; }
     }
 
     @media print {
