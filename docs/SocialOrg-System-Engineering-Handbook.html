@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SocialOrg — מדריך הנדסת מערכות</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg:        #f7f8fc;
+      --surface:   #ffffff;
+      --card:      #ffffff;
+      --card-alt:  #f0f2f8;
+      --border:    #e2e6ef;
+      --border-2:  #cdd2e0;
+      --accent:    #0077bb;
+      --accent-bg: #e8f4ff;
+      --green:     #16a34a;
+      --green-bg:  #e8faf0;
+      --amber:     #b45309;
+      --amber-bg:  #fef9ec;
+      --red:       #dc2626;
+      --red-bg:    #fff1f1;
+      --purple:    #6d28d9;
+      --purple-bg: #f3eeff;
+      --text:      #141428;
+      --text-2:    #3d3d5c;
+      --text-3:    #8888aa;
+      --code-bg:   #eef0f6;
+      --shadow:    0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Heebo', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      padding: 0;
+      direction: rtl;
+    }
+
+    .page-wrap {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: row-reverse;
+    }
+
+    /* ── Sidebar TOC ── */
+    nav.toc {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 250px;
+      flex-shrink: 0;
+      overflow-y: auto;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      padding: 32px 0 40px;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.04);
+    }
+
+    nav.toc .toc-logo {
+      padding: 0 22px 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    nav.toc .toc-logo-text {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    nav.toc .toc-logo-sub {
+      font-size: 10.5px;
+      color: var(--text-3);
+      margin-top: 2px;
+    }
+
+    nav.toc .toc-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 12px 22px 8px;
+    }
+
+    nav.toc a {
+      display: block;
+      padding: 5px 22px;
+      font-size: 13px;
+      color: var(--text-2);
+      text-decoration: none;
+      border-right: 2px solid transparent;
+      transition: all 0.12s;
+    }
+
+    nav.toc a:hover {
+      color: var(--accent);
+      border-right-color: var(--accent);
+      background: var(--accent-bg);
+    }
+
+    nav.toc a.section {
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    nav.toc a.sub {
+      padding-right: 36px;
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    nav.toc a.sub:hover { color: var(--accent); }
+
+    /* ── Main content ── */
+    main {
+      flex: 1;
+      min-width: 0;
+      max-width: 860px;
+      padding: 56px 60px 100px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      margin-bottom: 60px;
+      padding-bottom: 48px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .hero .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-bg);
+      border: 1px solid #bee3f8;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .hero .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .hero h1 {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero .subtitle {
+      font-size: 16px;
+      color: var(--text-2);
+      max-width: 620px;
+      line-height: 1.75;
+    }
+
+    .hero .meta {
+      display: flex;
+      gap: 0;
+      margin-top: 32px;
+      flex-wrap: wrap;
+      background: var(--card-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .hero .meta-item {
+      font-size: 12px;
+      color: var(--text-3);
+      padding: 12px 20px;
+      border-left: 1px solid var(--border);
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .hero .meta-item:last-child { border-left: none; }
+    .hero .meta-item strong { color: var(--text-2); display: block; font-size: 13px; margin-bottom: 2px; }
+
+    /* ── Section headers ── */
+    .section-block { margin-bottom: 72px; }
+
+    .section-num {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 10px;
+      background: var(--card-alt);
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    h2.section-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 28px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--border);
+      letter-spacing: -0.01em;
+    }
+
+    h2.section-title .accent { color: var(--accent); }
+    h2.section-title .green  { color: var(--green); }
+    h2.section-title .amber  { color: var(--amber); }
+    h2.section-title .purple { color: var(--purple); }
+
+    h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 36px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h3::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 18px;
+      background: var(--accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    h4 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin: 28px 0 10px;
+    }
+
+    p {
+      font-size: 15px;
+      color: var(--text-2);
+      margin-bottom: 16px;
+      line-height: 1.85;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card.accent-left { border-right: 4px solid var(--accent); background: var(--accent-bg); }
+    .card.green-left  { border-right: 4px solid var(--green);  background: var(--green-bg); }
+    .card.amber-left  { border-right: 4px solid var(--amber);  background: var(--amber-bg); }
+    .card.red-left    { border-right: 4px solid var(--red);    background: var(--red-bg); }
+    .card.purple-left { border-right: 4px solid var(--purple); background: var(--purple-bg); }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 10px;
+    }
+
+    .card.accent-left .card-title { color: var(--accent); }
+    .card.green-left  .card-title { color: var(--green); }
+    .card.amber-left  .card-title { color: var(--amber); }
+    .card.purple-left .card-title { color: var(--purple); }
+
+    .card p { margin-bottom: 6px; color: var(--text-2); }
+    .card p:last-child { margin-bottom: 0; }
+
+    /* Callout */
+    .callout {
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-size: 14px;
+      line-height: 1.75;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .callout.info    { background: var(--accent-bg); border: 1px solid #bee3f8; color: #0a5f8a; }
+    .callout.success { background: var(--green-bg);  border: 1px solid #bbf0ce; color: #14532d; }
+    .callout.warning { background: var(--amber-bg);  border: 1px solid #fde68a; color: #78350f; }
+    .callout.danger  { background: var(--red-bg);    border: 1px solid #fecaca; color: #991b1b; }
+
+    .callout .icon { flex-shrink: 0; font-size: 17px; margin-top: 1px; }
+
+    /* ── Code blocks ── */
+    pre {
+      background: #1e1e2e;
+      border: none;
+      border-radius: 10px;
+      padding: 20px 24px;
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      font-size: 13px;
+      line-height: 1.7;
+      direction: ltr;
+      text-align: left;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+    }
+
+    pre::before {
+      content: '// קוד';
+      display: block;
+      font-family: 'Heebo', sans-serif;
+      font-size: 10px;
+      color: #555570;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      text-align: right;
+      direction: rtl;
+    }
+
+    code {
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      color: #cdd6f4;
+    }
+
+    p code, li code {
+      background: var(--code-bg);
+      border: 1px solid var(--border-2);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      color: #0077aa;
+      direction: ltr;
+      display: inline-block;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+
+    .kw  { color: #cba6f7; }
+    .str { color: #a6e3a1; }
+    .num { color: #fab387; }
+    .cmt { color: #6c7086; font-style: italic; }
+    .fn  { color: #89b4fa; }
+    .prop{ color: #f9e2af; }
+
+    /* ── Lists ── */
+    ul, ol { padding-right: 24px; margin-bottom: 16px; }
+
+    li {
+      font-size: 14.5px;
+      color: var(--text-2);
+      margin-bottom: 8px;
+      line-height: 1.8;
+    }
+
+    li strong { color: var(--text); }
+    ul li::marker { color: var(--accent); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0 28px;
+      font-size: 13.5px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    th {
+      background: var(--text);
+      color: #e8e8f0;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 12px 16px;
+      text-align: right;
+      border: none;
+    }
+
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      border-left: none;
+      border-right: none;
+      color: var(--text-2);
+      vertical-align: top;
+      text-align: right;
+      background: var(--surface);
+    }
+
+    tr:nth-child(even) td { background: #f8f9fc; }
+    tr:last-child td { border-bottom: none; }
+    td strong { color: var(--text); }
+
+    /* ── Flow diagram ── */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      margin: 24px 0;
+      direction: ltr;
+      background: var(--card-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .flow-step {
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 600;
+      flex-shrink: 0;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .flow-step small { color: var(--text-3); font-weight: 400; }
+
+    .flow-step.active {
+      background: var(--accent-bg);
+      border-color: #bee3f8;
+      color: var(--accent);
+    }
+
+    .flow-step.active small { color: #5aabcc; }
+
+    .flow-arrow {
+      color: var(--text-3);
+      padding: 0 8px;
+      font-size: 18px;
+    }
+
+    /* ── Agent cards ── */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .agent-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      border-top: 3px solid var(--border-2);
+    }
+
+    .agent-card .agent-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .agent-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 10px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .agent-card p { font-size: 13px; margin: 0; color: var(--text-2); }
+
+    /* ── Stat pills ── */
+    .stat-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .stat-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: center;
+      min-width: 110px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-pill .val {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent);
+      direction: ltr;
+      line-height: 1;
+    }
+
+    .stat-pill .lbl {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 5px;
+    }
+
+    /* ── Step list ── */
+    .step-list {
+      counter-reset: steps;
+      list-style: none;
+      padding: 0;
+      margin: 16px 0;
+    }
+
+    .step-list li {
+      counter-increment: steps;
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+
+    .step-list li::before {
+      content: counter(steps);
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 3px;
+      box-shadow: 0 2px 6px rgba(0,119,187,0.3);
+    }
+
+    hr {
+      border: none;
+      border-top: 2px solid var(--border);
+      margin: 52px 0;
+    }
+
+    @media (max-width: 900px) {
+      nav.toc { display: none; }
+      main { padding: 40px 20px 80px; }
+    }
+
+    @media print {
+      nav.toc { display: none; }
+      body { background: white; }
+      main { max-width: 100%; padding: 24px; }
+      pre { white-space: pre-wrap; }
+      .card { box-shadow: none; border: 1px solid #ccc; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- ════════ Sidebar TOC ════════ -->
+  <nav class="toc">
+    <div class="toc-logo">
+      <div class="toc-logo-text">SocialOrg</div>
+      <div class="toc-logo-sub">מדריך הנדסת מערכות · v1.0</div>
+    </div>
+    <div class="toc-title">תוכן עניינים</div>
+
+    <a class="section" href="#s1">1 · סיכום מנהלים</a>
+    <a class="sub" href="#s1-what">מה זה SocialOrg?</a>
+    <a class="sub" href="#s1-pillars">שלושת הפילרים</a>
+
+    <a class="section" href="#s2">2 · תשתית ופריסה</a>
+    <a class="sub" href="#s2-hosting">Vercel מול Render</a>
+    <a class="sub" href="#s2-github">GitHub ו-CI</a>
+    <a class="sub" href="#s2-uptimerobot">UptimeRobot</a>
+    <a class="sub" href="#s2-flow">מסלול הבקשה</a>
+
+    <a class="section" href="#s3">3 · הצינור האג'נטי</a>
+    <a class="sub" href="#s3-agents">שלושת הסוכנים</a>
+    <a class="sub" href="#s3-sequential">עיבוד טורי מול מקבילי</a>
+    <a class="sub" href="#s3-image">חילוץ תמונות</a>
+
+    <a class="section" href="#s4">4 · ממשל AI</a>
+    <a class="sub" href="#s4-modes">מצב Turbo מול Production</a>
+    <a class="sub" href="#s4-quota">מפסק-קצבה</a>
+    <a class="sub" href="#s4-rate">הגבלת קצב</a>
+    <a class="sub" href="#s4-rules">חוזה כללי ה-AI</a>
+
+    <a class="section" href="#s5">5 · ממשל נתונים</a>
+    <a class="sub" href="#s5-fifo">תור FIFO</a>
+    <a class="sub" href="#s5-dedup">מניעת כפילויות</a>
+    <a class="sub" href="#s5-zod">אימות Zod</a>
+    <a class="sub" href="#s5-schema">סכמת ה-DB</a>
+
+    <a class="section" href="#s6">6 · תחזוקה ועתיד</a>
+    <a class="sub" href="#s6-feed">הוספת פיד חדש</a>
+    <a class="sub" href="#s6-logs">קריאת לוגים ב-Render</a>
+    <a class="sub" href="#s6-apply">יישום בפרויקטים חדשים</a>
+  </nav>
+
+  <!-- ════════ Main Content ════════ -->
+  <main>
+
+    <!-- ─── Hero ─── -->
+    <div class="hero">
+      <div class="badge">מדריך הנדסת מערכות · גרסה 1.0</div>
+      <h1><span>SocialOrg</span><br>מסמך ארכיטקטורה</h1>
+      <p class="subtitle">
+        מסמך טכני מקיף לכל החלטת ארכיטקטורה, חוזה נתונים וכלל ממשל AI
+        המנחים את פלטפורמת אגרגציית החדשות SocialOrg.
+        נועד להיות מקור האמת היחיד לכל מפתח או תורם עתידי.
+      </p>
+      <div class="meta">
+        <div class="meta-item"><strong>סטאק</strong> · React / Vite · Node.js / Express · SQLite</div>
+        <div class="meta-item"><strong>AI</strong> · Gemini Flash Lite (חינמי)</div>
+        <div class="meta-item"><strong>פריסה</strong> · Vercel + Render</div>
+        <div class="meta-item"><strong>פידים</strong> · 30+ מקורות RSS ב-5 קטגוריות</div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 1
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section-block" id="s1">
+      <div class="section-num">פרק 01</div>
+      <h2 class="section-title"><span class="accent">סיכום</span> מנהלים</h2>
+
+      <h3 id="s1-what">מה זה SocialOrg?</h3>
+      <p>
+        SocialOrg הוא <strong>אגרגטור חדשות אישי מבוסס AI</strong>. המערכת בולעת פידי RSS מ-30+
+        מקורות חדשות נבחרים, משתמשת במודל השפה Gemini של גוגל כדי לסווג, לדרג ולסכם
+        כל כתבה לתקציר עברי מובנה, ומאחסנת את התוצאה במסד נתונים SQLite מקומי
+        שמוגש דרך REST API לממשק React.
+      </p>
+      <p>
+        ערך הליבה הוא <strong>אוצרות תוכן בקנה מידה רחב ללא מאמץ ידני</strong>:
+        משימה תזמונית רצה כל שעה, משיכה ועיבוד אוטומטיים של תוכן חדש, כך שהמשתמש
+        תמיד פותח את האפליקציה לפיד טרי ומסודר.
+      </p>
+
+      <div class="callout info">
+        <span class="icon">💡</span>
+        <span>
+          SocialOrg <em>אינה</em> זרם בזמן אמת. זהו <strong>דייג׳סט מרענן-אצוות</strong>:
+          כתבות מעובדות במחזורים שעתיים ונשמרות בצורה עמידה. ממשק המשתמש קורא מ-SQLite,
+          לא מפידי RSS חיים. החלטה מכוונת — מנתקת בין זמינות הפיד לביצועי ממשק המשתמש,
+          ומפשטת את מניעת הכפילויות.
+        </span>
+      </div>
+
+      <h3 id="s1-pillars">שלושת פילרי הליבה</h3>
+
+      <div class="card green-left">
+        <div class="card-title">פילר 1 — אמינות (Reliability)</div>
+        <p>
+          כל כתבה עוברת דרך צינור עמיד לכשלים. פיד פגום אחד, כתובת מתה,
+          או כשל ב-Gemini API <strong>לא יכולים לקרוס את האצווה</strong>. כל כשל
+          נתפס, מתועד וחוזר לשמירת תוכן גולמי. המערכת מסיימת כל ריצה ומדווחת:
+          <code>processed=N skipped=N errors=N</code>.
+        </p>
+      </div>
+
+      <div class="card accent-left">
+        <div class="card-title">פילר 2 — אוטומציה מבוססת AI</div>
+        <p>
+          Gemini מבצע ארבעה תפקידים לכל כתבה: <strong>מסווג</strong> אותה לקטגוריית DB בעברית,
+          מקצה <strong>תת-קטגוריה</strong>, כותב <strong>תקציר עברי</strong> (3 משפטים שלמים),
+          ונותן <strong>ציון רלוונטיות</strong> מ-1 עד 10. זה אינו צ'אטבוט — זהו צינור
+          פלט מובנה שבו ה-AI ממלא חוזה JSON מוקלד שנאכף על ידי Zod.
+        </p>
+      </div>
+
+      <div class="card amber-left">
+        <div class="card-title">פילר 3 — מדרגיות עם מודעות לעלויות</div>
+        <p>
+          המערכת רצה על <strong>100% tier חינמי</strong> (Vercel Hobby, Render Free, Gemini Free).
+          כל החלטת עיצוב — תור FIFO, עיכוב 5 שניות, מפסק-קצבה, מתג Turbo Mode —
+          קיימת כדי למקסם תפוקה מבלי לשלם חשבון. המערכת מתוכננת לגדול בחן
+          על ידי שדרוג צוואר הבקבוק הספציפי בלבד.
+        </p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-pill"><div class="val">30+</div><div class="lbl">פידי RSS</div></div>
+        <div class="stat-pill"><div class="val">5</div><div class="lbl">קטגוריות</div></div>
+        <div class="stat-pill"><div class="val">15</div><div class="lbl">תת-קטגוריות</div></div>
+        <div class="stat-pill"><div class="val">10</div><div class="lbl">כתבות / מקור (FIFO)</div></div>
+        <div class="stat-pill"><div class="val">5s</div><div class="lbl">עיכוב בין קריאות AI</div></div>
+        <div class="stat-pill"><div class="val">12</div><div class="lbl">RPM בטוח</div></div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 2
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section-block" id="s2">
+      <div class="section-num">פרק 02</div>
+      <h2 class="section-title"><span class="green">תשתית</span> ומחסנית פריסה</h2>
+
+      <h3 id="s2-hosting">Vercel (פרונטאנד) מול Render (בקאנד)</h3>
+      <p>
+        SocialOrg משתמשת ב<strong>ארכיטקטורת אירוח מפוצלת</strong>: ממשק ה-React הסטטי
+        מוגש על ידי Vercel וה-API מבוסס Node.js מתארח ב-Render. אלו שני פרדיגמות
+        אירוח שונות שנבחרו מסיבות שונות.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>היבט</th>
+            <th>Vercel (פרונטאנד)</th>
+            <th>Render (בקאנד + DB)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>מה הוא מגיש</strong></td>
+            <td>חבילת HTML/CSS/JS סטטית (פלט בנייה של React/Vite)</td>
+            <td>REST API (Express) + קובץ SQLite</td>
+          </tr>
+          <tr>
+            <td><strong>מודל ריצה</strong></td>
+            <td>Edge CDN — ללא שרת, קבצים מוגשים מ-40+ נקודות נוכחות</td>
+            <td>תהליך Node.js מתמשך עם דיסק מחובר</td>
+          </tr>
+          <tr>
+            <td><strong>טריגר פריסה</strong></td>
+            <td>push לגיט ← בנייה אוטומטית ← פריסה ל-CDN</td>
+            <td>push לגיט ← הורדת קוד ← הפעלה מחדש של Node.js</td>
+          </tr>
+          <tr>
+            <td><strong>מצב / עמידות</strong></td>
+            <td>חסר-מצב — ללא דיסק, ללא DB</td>
+            <td>קובץ SQLite נשמר בין פריסות</td>
+          </tr>
+          <tr>
+            <td><strong>למה הבחירה הזו</strong></td>
+            <td>CDN ללא הגדרות ל-SPA של React; HTTPS חינמי; פריסות preview אוטומטיות</td>
+            <td>צריך filesystem עמיד ל-SQLite; מריץ את מתזמן cron</td>
+          </tr>
+          <tr>
+            <td><strong>הגדרה קריטית</strong></td>
+            <td>משתנה סביבה <code>VITE_API_BASE_URL</code> שמצביע ל-Render</td>
+            <td>משתנים <code>ENABLE_AI_AGENT</code>, <code>GEMINI_API_KEY</code>, <code>FRONTEND_URL</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout warning">
+        <span class="icon">⚠️</span>
+        <span>
+          <strong>CORS הוא קריטי:</strong> מכיוון שהפרונטאנד והבקאנד נמצאים בדומיינים שונים
+          (vercel.app מול onrender.com), כל תגובות ה-API חייבות לכלול את הכותרת
+          <code>Access-Control-Allow-Origin</code> הנכונה. הבקאנד מסיר סלאש עוקב מ-<code>FRONTEND_URL</code>
+          לפני הגדרת CORS — באג שגרם לכשל ייצור קשה לאבחון בעבר.
+        </span>
+      </div>
+
+      <h3 id="s2-github">GitHub — בקרת קוד מקור ו-CI</h3>
+      <p>
+        GitHub משמש כ<strong>מקור האמת היחיד</strong> וכטריגר הפריסה.
+        גם Vercel וגם Render מחוברים למאגר GitHub ומאזינים לפוש לענף <code>master</code>.
+        כשקומיט נוחת:
+      </p>
+      <ol>
+        <li><strong>Vercel</strong> מזהה את הפוש, מריץ <code>npm run build</code> בתוך <code>frontend/</code>, ופורס את החבילה הסטטית החדשה ל-CDN שלו תוך ~30 שניות.</li>
+        <li><strong>Render</strong> מזהה את אותו הפוש, מושך את הקוד החדש, מתקין תלויות, ומפעיל מחדש את תהליך Node.js תוך ~2 דקות.</li>
+      </ol>
+      <p>
+        אין שלב פריסה ידני. <strong>git push = פריסה לייצור.</strong>
+        מכוון — מסיר שגיאת אנוש מתהליך הפריסה ומבטיח שהמאגר תמיד משקף בדיוק
+        את מה שרץ בייצור.
+      </p>
+
+      <h3 id="s2-uptimerobot">UptimeRobot — פועם לב המערכת</h3>
+      <p>
+        ה-tier החינמי של Render <strong>מכבה שירותי אינטרנט לא פעילים לאחר 15 דקות</strong>
+        של חוסר פעילות. הפעלה קרה לוקחת 30–60 שניות, מה שיגרום לקריאת ה-API הראשונה
+        אחרי חוסר פעילות להרגיש שבורה למשתמש. UptimeRobot פותר זאת.
+      </p>
+      <p>
+        UptimeRobot מוגדר לפנג את נקודת הקצה לבדיקת בריאות של בקאנד Render
+        (<code>/health</code>) כל 5 דקות. זה שומר על החם התהליך בכל עת. הוא גם
+        משמש כ<strong>טריגר cron חיצוני</strong>: UptimeRobot מוגדר בנוסף לקרוא
+        <code>POST /api/cron/fetch</code> לפי לוח זמנים, ומשמש כפועם הלב החיצוני
+        שמניע אינדוקסיית כתבות.
+      </p>
+
+      <div class="card accent-left">
+        <div class="card-title">למה לא להסתמך רק על node-cron?</div>
+        <p>
+          הבקאנד אכן מריץ <code>node-cron</code> פנימית, אבל cron מופעל רק אם התהליך
+          חי. אם Render מכבה את התהליך (בשל חוסר פעילות) ואין בקשות נכנסות,
+          ה-cron הפנימי לעולם לא מופעל. UptimeRobot הוא <strong>השומר חיצוני</strong>
+          שמבטיח שבקשה תגיע לפני שפג חלון ההשבתה, שומר על חיות התהליך
+          ועל אמינות ה-cron.
+        </p>
+      </div>
+
+      <h3 id="s2-flow">מסלול הבקשה המלא</h3>
+      <p>כאשר משתמש פותח את האפליקציה, זה המסלול המדויק שהנתונים עוברים:</p>
+
+      <div class="flow">
+        <div class="flow-step active">דפדפן</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Vercel CDN<br><small style="color:var(--text-3)">חבילת React</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">React fetch()<br><small style="color:var(--text-3)">GET /api/articles</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step active">Render (Express)<br><small style="color:var(--accent)">REST API</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">better-sqlite3<br><small style="color:var(--text-3)">שאילתת SQLite</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">תגובת JSON<br><small style="color:var(--text-3)">{ data: [...] }</small></div>
+      </div>
+
+      <p>ומסלול אינדוקסיית הרקע (כל שעה):</p>
+
+      <div class="flow">
+        <div class="flow-step">UptimeRobot<br><small style="color:var(--text-3)">POST /api/cron/fetch</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step active">rss.service.js<br><small style="color:var(--accent)">הצינור מתחיל</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">פידי RSS<br><small style="color:var(--text-3)">30+ מקורות</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Gemini API<br><small style="color:var(--text-3)">סיווג + סיכום</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step active">SQLite<br><small style="color:var(--accent)">הוספה + גיזום</small></div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 3
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section-block" id="s3">
+      <div class="section-num">פרק 03</div>
+      <h2 class="section-title">הצינור <span class="purple">האג'נטי</span> — נשמת הפרויקט</h2>
+
+      <p>
+        צינור האינדוקסיה ב-<code>rss.service.js</code> מדוגמן ארכיטקטורית
+        כשלושה סוכנים נפרדים, כל אחד אחראי על תחום ברור. הפרדה זו הופכת
+        את המערכת לניתנת לדיבוג, החלפה וביקורת.
+      </p>
+
+      <div class="agent-grid" id="s3-agents">
+        <div class="agent-card">
+          <div class="agent-label" style="color: var(--green)">סוכן A</div>
+          <h4>בקר המקורות</h4>
+          <p>
+            הבעלים של מערך <code>RSS_FEEDS</code> — רישום המקורות הסמכותי.
+            מצהיר על <code>url</code>, <code>source_name</code>, <code>forceCategory</code>,
+            <code>forceSubCategory</code>, <code>forceTag</code> ו-<code>isHebrew</code>
+            לכל פיד. תפקידו <em>להגדיר</em> אילו מקורות קיימים ולאכוף
+            עקיפות מטא-דאטה קשות כך שה-AI לעולם לא יסווג פיד בצורה שגויה.
+          </p>
+        </div>
+        <div class="agent-card">
+          <div class="agent-label" style="color: var(--accent)">סוכן B</div>
+          <h4>מפקח העיצוב</h4>
+          <p>
+            הבעלים של סכמת Zod (<code>articleLlmSchema</code> ב-<code>ai.service.js</code>)
+            ומפעל <code>buildPrompt()</code>. תפקידו לאמת שכל תגובת AI
+            נכונה מבנית לפני שנתון כלשהו נוגע במסד הנתונים.
+            אוכף טיפוסים, טווחים (<code>relevance_score 1–10</code>) ואורכים מינימליים.
+            תגובת AI פגומה זורקת — לעולם אינה משחיתת את ה-DB בשקט.
+          </p>
+        </div>
+        <div class="agent-card">
+          <div class="agent-label" style="color: var(--amber)">סוכן C</div>
+          <h4>מנגנון הצינור</h4>
+          <p>
+            הפונקציה <code>fetchAndParseFeeds()</code> עצמה. מתזמרת את לולאת
+            <code>for...of</code> החיצונית, מנהלת את דגל מפסק-הקצבה,
+            מחליטה על מצב Turbo מול AI, קוראת להכנסה ל-DB ולגיזום FIFO,
+            ותופסת כל מחלקת כשל בנפרד. אינווריאנט יחיד:
+            <strong>האצווה תמיד חייבת להסתיים</strong>, ללא קשר לכשלים בודדים.
+          </p>
+        </div>
+      </div>
+
+      <h3 id="s3-sequential">עיבוד טורי: למה <code>for...of</code> ולא <code>Promise.all</code></h3>
+
+      <p>
+        זו אחת מהחלטות הארכיטקטורה החשובות ביותר בכל הקוד.
+        הצינור מעבד כתבות אחת-אחת בלולאת <code>for...of</code>,
+        לעולם לא במקביל. הסיבות:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>היבט</th>
+            <th><code>Promise.all</code> (מקביל)</th>
+            <th><code>for...of</code> (טורי) ✓</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>מהירות</strong></td>
+            <td>הכי מהיר — כל הבקשות נורות בו-זמנית</td>
+            <td>איטי יותר — כתבה אחת בכל פעם</td>
+          </tr>
+          <tr>
+            <td><strong>הגבלת קצב</strong></td>
+            <td>חורג מיד ממגבלת 15 RPM של Gemini ← שגיאות 429 בכל ריצה</td>
+            <td>עיכוב 5s לכתבה = 12 RPM — בטוח מתחת לסף</td>
+          </tr>
+          <tr>
+            <td><strong>בידוד כשלים</strong></td>
+            <td>כשל אחד יכול להתפשט ולבטל בקשות אחרות בתעופה</td>
+            <td>כל כתבה מבודדת לחלוטין — קריסה ב-#3 לעולם אינה משפיעה על #4</td>
+          </tr>
+          <tr>
+            <td><strong>מפסק-קצבה</strong></td>
+            <td>בלתי אפשרי — כל הקריאות כבר נשלחו כשמגיעה שגיאת הקצבה</td>
+            <td>הדגל מתהפך בשגיאה הראשונה; כל הכתבות הבאות מדלגות על Gemini</td>
+          </tr>
+          <tr>
+            <td><strong>עקביות DB</strong></td>
+            <td>כתיבות מקביליות ל-SQLite (שהוא כותב-יחיד) גורמות לשגיאות נעילה</td>
+            <td>כתיבות טוריות — מודל הכותב-היחיד של SQLite לעולם אינו נלחץ</td>
+          </tr>
+          <tr>
+            <td><strong>ניתנות לדיבוג</strong></td>
+            <td>לוגים מעורבבים קשים מאוד לקריאה ומתאם</td>
+            <td>לוגים כרונולוגיים וניתנים לעקיבה מושלמת לכל כתבה</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout success">
+        <span class="icon">✅</span>
+        <span>
+          <strong>אמינות &gt; מהירות</strong> הוא העקרון המנחה. הצינור רץ על cron —
+          המשתמשים לא מחכים בזמן אמת לסיומו. עוד 10 דקות לעיבוד אצווה שלמה
+          לא עולה כלום. אצווה שקרסה ובשקט מחקה 40 כתבות — זה כשל מוצר.
+        </span>
+      </div>
+
+      <h3 id="s3-image">חילוץ תמונות — אסטרטגיה רב-שלבית</h3>
+      <p>
+        פידי RSS מסתירים כתובות URL של תמונות ב-5+ מיקומים שונים בהתאם לפורמט
+        הפיד של המפרסם. הפונקציה <code>extractImage()</code> מיישמת אסטרטגיית
+        מפל מסודרת לפי עדיפות:
+      </p>
+<pre><code><span class="cmt">// שרשרת עדיפויות — ה-URL הראשון שאינו חסום מנצח</span>
+<span class="kw">const</span> candidates = [
+  <span class="fn">cleanUrl</span>(item.enclosure?.url),         <span class="cmt">// ① enclosure סטנדרטי ב-RSS</span>
+  <span class="fn">mediaUrl</span>(item[<span class="str">'media:content'</span>]),       <span class="cmt">// ② מרחב שמות podcast / media</span>
+  <span class="fn">mediaUrl</span>(item[<span class="str">'media:thumbnail'</span>]),     <span class="cmt">// ③ thumbnail של YouTube</span>
+  <span class="fn">imgFromHtml</span>(item[<span class="str">'content:encoded'</span>]), <span class="cmt">// ④ גוף HTML מלא (TechCrunch)</span>
+  <span class="fn">imgFromHtml</span>(item.content),              <span class="cmt">// ⑤ שדה תוכן חלקי</span>
+  <span class="fn">imgFromHtml</span>(item.description),          <span class="cmt">// ⑥ HTML של תיאור הפיד</span>
+];
+<span class="kw">return</span> candidates.<span class="fn">find</span>((url) => url && !<span class="fn">isBlockedImage</span>(url)) ?? <span class="kw">null</span>;</code></pre>
+
+      <p>
+        הרג'קס <code>BLOCKED_IMAGE_RE</code> מסנן כתובות URL של placeholder/לוגו
+        (תבניות כמו <code>default</code>, <code>placeholder</code>, <code>blank</code>)
+        כך שלוגואים גנריים של מפרסמים לעולם לא יופיעו כתמונות כתבה. אם כל 6
+        האסטרטגיות נכשלות, הפרונטאנד מרנדר תמונת SVG scene ייעודית לקטגוריה.
+      </p>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 4
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section-block" id="s4">
+      <div class="section-num">פרק 04</div>
+      <h2 class="section-title"><span class="accent">ממשל AI</span> ואופטימיזציית עלויות</h2>
+
+      <p>
+        ממשל AI הוא המשמעת של הבטחה שמערכת AI מתנהגת בצורה צפויה,
+        בתוך תקציב, עם התנהגות fallback מוגדרת כאשר היא נכשלת. SocialOrg
+        מיישמת ארבעה מנגנוני ממשל.
+      </p>
+
+      <h3 id="s4-modes">מצב Turbo מול Production AI</h3>
+      <p>
+        לצינור שני מצבי פעולה, שנשלטים על ידי משתנה סביבה אחד:
+        <code>ENABLE_AI_AGENT=true|false</code> שמוגדר בדשבורד של Render.
+        <strong>ללא שינוי קוד, ללא פריסה מחדש</strong> כדי לעבור ביניהם.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>מאפיין</th>
+            <th>🚀 Turbo Mode (false)</th>
+            <th>🤖 Production AI (true)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Gemini נקרא?</strong></td>
+            <td>לא — מדולג לחלוטין</td>
+            <td>כן — לכל כתבה חדשה</td>
+          </tr>
+          <tr>
+            <td><strong>עיכוב 5 שניות?</strong></td>
+            <td>לא — אצווה מיידית</td>
+            <td>כן — הגבלת קצב נאכפת</td>
+          </tr>
+          <tr>
+            <td><strong>תוכן ai_summary</strong></td>
+            <td><code>contentSnippet</code> גולמי מ-RSS או כותרת</td>
+            <td>תקציר עברי 3 משפטים שנוצר על ידי Gemini</td>
+          </tr>
+          <tr>
+            <td><strong>relevance_score</strong></td>
+            <td>מקודד קשה <code>10</code></td>
+            <td>ציון Gemini 1–10</td>
+          </tr>
+          <tr>
+            <td><strong>קצבת API בשימוש?</strong></td>
+            <td>אפס</td>
+            <td>~250 טוקני פלט לכתבה</td>
+          </tr>
+          <tr>
+            <td><strong>מהירות</strong></td>
+            <td>אצווה שלמה ב-&lt;30 שניות</td>
+            <td>אצווה שלמה ב-10–20 דקות</td>
+          </tr>
+          <tr>
+            <td><strong>מקרה שימוש</strong></td>
+            <td>פיתוח, בדיקות, התאוששות מקצבה, אכלוס DB ראשוני</td>
+            <td>פעולת ייצור רגילה</td>
+          </tr>
+          <tr>
+            <td><strong>סמן לוג</strong></td>
+            <td><code>[TURBO]</code></td>
+            <td><code>[AI]</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout info">
+        <span class="icon">💡</span>
+        <span>
+          היכולת לעבור מצבים דרך משתנה סביבה — מבלי לגעת בקוד או לטריגר פריסה —
+          היא עקרון תפעול ייצור מקצועי. מאפשר תגובה מיידית לתשישות קצבה
+          ללא כל עבודת פיתוח.
+        </span>
+      </div>
+
+      <h3 id="s4-quota">מפסק-הקצבה (<code>isQuotaExhausted</code>)</h3>
+
+      <p>
+        זהו מנגנון האמינות המתוחכם ביותר בכל הקוד. הבעיה המדויקת שהוא פותר:
+      </p>
+      <p>
+        ל-tier החינמי של Gemini יש <strong>מכסת בקשות יומית</strong>. אם הצינור
+        מעבד 50 כתבות וכתבה #12 מטריגרת תשישות קצבה, כתבות #13–50 יבצעו כל אחת
+        קריאת API, יקבלו שגיאת 429, יתעדו כשל ויתקדמו — מבזבזים 38 קריאות API מיותרות,
+        38 × עיכוב 5 שניות (3+ דקות המתנה מיותרת), ו-38 רשומות שגיאה שמסתירות
+        את הבעיה האמיתית.
+      </p>
+
+      <p>המפסק-קצבה מונע את כל זה:</p>
+<pre><code><span class="cmt">// מוצהר בתוך fetchAndParseFeeds() — מתאפס בכל הפעלה</span>
+<span class="kw">let</span> isQuotaExhausted = <span class="kw">false</span>;
+
+<span class="cmt">// בבלוק ה-catch:</span>
+<span class="kw">const</span> isQuotaError =
+  err.message.<span class="fn">startsWith</span>(<span class="str">'QUOTA_EXHAUSTED:'</span>) ||
+  err.message.<span class="fn">includes</span>(<span class="str">'429'</span>)             ||
+  err.message.<span class="fn">toLowerCase</span>().<span class="fn">includes</span>(<span class="str">'quota'</span>);
+
+<span class="kw">if</span> (isQuotaError && !isQuotaExhausted) {
+  isQuotaExhausted = <span class="kw">true</span>;  <span class="cmt">// היפוך הדגל — פעם אחת בלבד</span>
+  console.<span class="fn">warn</span>(<span class="str">'[ai] ⚡ QUOTA EXHAUSTED — עובר למצב Turbo...'</span>);
+}</code></pre>
+
+      <p>ברגע שהדגל הוא <code>true</code>, נתיב הקוד בראש לולאת הכתבה מזהה אותו:</p>
+<pre><code><span class="kw">if</span> (isQuotaExhausted) {
+  <span class="cmt">// שמירה מיידית כ-Turbo — ללא קריאת Gemini, ללא עיכוב</span>
+  <span class="kw">const</span> article = { ..., relevance_score: <span class="num">0</span>, ai_summary: <span class="fn">extractSummary</span>(item, title) };
+  <span class="kw">const</span> inserted = <span class="fn">insertArticle</span>(db, article);
+  <span class="kw">if</span> (inserted) { console.<span class="fn">log</span>(<span class="str">`[db] ✓ [QUOTA-TURBO] "${title}"...`</span>); }
+}</code></pre>
+
+      <div class="card purple-left">
+        <div class="card-title">למה להצהיר על הדגל בתוך הפונקציה (ולא בהיקף המודול)?</div>
+        <p>
+          אם <code>isQuotaExhausted</code> היה מוצהר בהיקף המודול (מחוץ לפונקציה),
+          הוא היה נמשך בין הפעלות. ריצת cron השעתית הבאה הייתה מתחילה עם הדגל
+          עדיין <code>true</code> — כלומר התאוששות הקצבה (Gemini מתאפס כל שעה)
+          לעולם לא תנוצל. על ידי הצהרתו בתוך <code>fetchAndParseFeeds()</code>,
+          כל הפעלה חדשה מתחילה עם <code>false</code> טרי. אלו הן הסמנטיקות "לכל ריצה".
+        </p>
+      </div>
+
+      <h3 id="s4-rate">הגבלת קצב — עיכוב 5 שניות</h3>
+
+      <p>
+        ה-tier החינמי של Gemini Flash Lite אוכף מגבלה של <strong>15 בקשות לדקה (RPM)</strong>.
+        הצינור מכניס <code>await sleep(5000)</code> של 5 שניות לפני כל קריאת Gemini.
+      </p>
+
+      <p>החשבון:</p>
+      <ul>
+        <li>60 שניות ÷ 5 שניות = <strong>12 בקשות לדקה</strong></li>
+        <li>12 RPM הם 80% מסף 15 RPM, משאירים מרווח של 3 בקשות לניסיונות חוזרים</li>
+        <li>לוגיקת הניסיון החוזר המובנית ב-<code>callWithRetry()</code> קוראת את כותרת <code>retry-after</code> של ה-API וממתינה בדיוק את הזמן המומלץ לפני הניסיון השני</li>
+      </ul>
+
+      <div class="callout danger">
+        <span class="icon">🚫</span>
+        <span>
+          <strong>אל תנמיך את העיכוב מתחת ל-4 שניות.</strong> ב-4 שניות, אתה בדיוק ב-15 RPM —
+          ניסיון חוזר אחד בכל מקום באצווה ידחוף אותך מעל. ה-5 שניות הנוכחיות מספקות מרווח.
+          ב-3 שניות (20 RPM) תקבל שגיאות 429 שיטתיות בכל ריצה.
+        </span>
+      </div>
+
+      <h3 id="s4-rules">חוזה כללי ה-AI</h3>
+
+      <p>
+        ה-prompt ב-<code>buildPrompt()</code> אינו הוראה חופשית — הוא
+        <strong>חוזה התנהגותי</strong> שה-AI חייב לציית לו. לכל כלל ב-prompt
+        יש סיבה הנדסית ספציפית:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>כלל ב-Prompt</th>
+            <th>למה הוא קיים</th>
+            <th>מה נשבר אם מסירים אותו</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>"כתוב בדיוק 3 משפטים שלמים"</code></td>
+            <td>מבטיח אורך תקציר עקבי בין כל הכתבות</td>
+            <td>AI מחזיר משפט אחד לחדשות פשוטות, 8 משפטים למורכבות — ממשק משתמש לא עקבי</td>
+          </tr>
+          <tr>
+            <td><code>"כל משפט חייב להסתיים בנקודה"</code></td>
+            <td>מאפשר ל-<code>cleanSummary()</code> לחתוך למשפט שלם אחרון בצורה אמינה</td>
+            <td>תקצירים עלולים להסתיים באליפסיס, באמצע משפט, או עם שיירי Markdown</td>
+          </tr>
+          <tr>
+            <td><code>"החזר JSON תקין בלבד"</code></td>
+            <td>מונע עטיפת Markdown (```json ... ```)</td>
+            <td><code>JSON.parse()</code> זורק בכל תגובה; כל הכתבות חוזרות לתוכן גולמי</td>
+          </tr>
+          <tr>
+            <td>הזרקת <code>forceSubCategory</code></td>
+            <td>מבטיח שה-AI משתמש בדיוק בתת-הקטגוריה שהפיד מצהיר עליה</td>
+            <td>AI עלול לסווג כתבת ברצלונה כ-FOOTBALL-NEWS; מופיעה בטאב הלא נכון</td>
+          </tr>
+          <tr>
+            <td><code>responseMimeType: 'application/json'</code></td>
+            <td>מפעיל את מצב הפלט המובנה של Gemini ברמת ה-API</td>
+            <td>בלעדיו, Gemini מתייחס לבקשה כהשלמת שיחה ומוסיף פרוזה מסביב ל-JSON</td>
+          </tr>
+          <tr>
+            <td><code>temperature: 0.1</code></td>
+            <td>טמפרטורה קרובה לאפס = פלט כמעט דטרמיניסטי</td>
+            <td>טמפרטורה גבוהה יותר מכניסה הלוצינציות יצירתיות בשדות מובנים</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 5
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section-block" id="s5">
+      <div class="section-num">פרק 05</div>
+      <h2 class="section-title"><span class="amber">ממשל נתונים</span></h2>
+
+      <h3 id="s5-fifo">לוגיקת תור FIFO (מקסימום 10 כתבות למקור)</h3>
+
+      <p>
+        ללא מגבלה, מסד הנתונים יגדל ללא גבולות. מקור בנפח גבוה אחד כמו BBC
+        יכול לפרסם 100 כתבות ביום, ובסופו של דבר לדחוק החוצה כתבות ממקורות קטנים
+        יותר ומאוצרים יותר כמו Fabrizio Romano.
+      </p>
+
+      <p>
+        גיזום FIFO (ראשון נכנס, ראשון יוצא) מוחל <strong>לפי זוג <code>(sub_category, source_name)</code></strong>
+        אחרי כל הכנסה מוצלחת. המגבלה היא <strong>10 כתבות לזוג</strong>.
+      </p>
+<pre><code><span class="cmt">// schema.js — trimSubCategory()</span>
+<span class="kw">const</span> MAX = <span class="num">10</span>;
+
+<span class="kw">const</span> count = db
+  .<span class="fn">prepare</span>(<span class="str">`SELECT COUNT(*) as n FROM articles
+     WHERE sub_category = ? AND source_name = ?`</span>)
+  .<span class="fn">get</span>(subCategory, sourceName).n;
+
+<span class="kw">if</span> (count <= MAX) <span class="kw">return</span>;  <span class="cmt">// אין מה לגזום</span>
+
+db.<span class="fn">prepare</span>(<span class="str">`DELETE FROM articles WHERE id IN (
+  SELECT id FROM articles
+  WHERE sub_category = ? AND source_name = ?
+  ORDER BY created_at ASC  -- הישנים ביותר ראשונים
+  LIMIT ?
+)`</span>).<span class="fn">run</span>(subCategory, sourceName, count - MAX);</code></pre>
+
+      <div class="card green-left">
+        <div class="card-title">למה לזוג על (sub_category + source_name) ולא רק sub_category?</div>
+        <p>
+          אם היינו גוזמים ברמת תת-הקטגוריה, BBC Sport יכול לאכלס את כל 10 חריצי NATIONAL,
+          ולא יישאר מקום ל-Sky Sports או לכל פיד לאומי אחר. הזיווג למקור
+          נותן לכל מקור תור עצמאי של 10 חריצים. BBC ו-Sky Sports מתחרים
+          בתוך התורות שלהם, לא אחד מול השני.
+        </p>
+      </div>
+
+      <h3 id="s5-dedup">מניעת כפילויות לפני קריאות LLM</h3>
+
+      <p>
+        הפעולה הראשונה ביותר בתוך לולאת הכתבה — לפני כל קריאת Gemini, לפני כל
+        חילוץ תמונה, לפני כל עיבוד — היא בדיקת אידמפוטנטיות:
+      </p>
+<pre><code><span class="kw">if</span> (<span class="fn">articleExists</span>(db, url)) {
+  result.skipped++;
+  <span class="kw">continue</span>;  <span class="cmt">// אין קריאת API, אין עיבוד</span>
+}</code></pre>
+
+      <p>בדיקה יחידה זו מספקת שלושה ערבויות:</p>
+      <ul>
+        <li><strong>שליטת עלויות:</strong> כתבה שהופיעה באצווה של אתמול לעולם אינה מסוכמת מחדש. כל כתבה עולה בדיוק קריאת Gemini אחת בכל חייה.</li>
+        <li><strong>אידמפוטנטיות:</strong> קריאה לצינור האחזור 10 פעמים ברצף מייצרת את אותו מצב DB כמו קריאה אחת. בטוח לטריגר ידנית בכל עת.</li>
+        <li><strong>מהירות:</strong> בריצה טיפוסית שבה רוב הכתבות כבר ב-DB, 90%+ מגוף הלולאה הוא בדיקת <code>SELECT 1</code> פשוטה — מיקרו-שניות לכתבה.</li>
+      </ul>
+
+      <p>
+        מסד הנתונים אוכף זאת ברמת הסכמה עם אילוץ <code>UNIQUE</code> על
+        <code>original_url</code>. גם אם לבדיקת הדה-דופ יש מצב תחרות (שתי ריצות צינור מקביליות),
+        משפט <code>INSERT OR IGNORE</code> מבטיח שהמסד תמיד נשאר עקבי.
+      </p>
+
+      <h3 id="s5-zod">אימות Zod — לעולם אל תסמוך על טקסט גולמי מ-LLM</h3>
+
+      <p>
+        כל תגובת Gemini מנותחת כ-JSON ולאחר מכן מאומתת מול סכמת Zod קפדנית
+        לפני שנתון כלשהו נוגע במסד הנתונים. זהו כלל איכות נתונים שאי אפשר לסחור בו.
+      </p>
+<pre><code><span class="kw">const</span> articleLlmSchema = z.<span class="fn">object</span>({
+  category: z.<span class="fn">enum</span>([
+    <span class="str">'עולם ה-AI והפיתוח'</span>,
+    <span class="str">'חדשות בעולם הספורט'</span>,
+    <span class="str">'חדשות בעולם הכדורגל'</span>,
+    <span class="str">'חדשות כלליות בעולם הבידור'</span>,
+    <span class="str">'חדשות כלליות בעולם'</span>,
+  ]),
+  sub_category: z.<span class="fn">string</span>().<span class="fn">min</span>(<span class="num">1</span>),
+  tag: z.<span class="fn">string</span>().<span class="fn">min</span>(<span class="num">1</span>),
+  relevance_score: z.<span class="fn">number</span>().<span class="fn">int</span>().<span class="fn">min</span>(<span class="num">1</span>).<span class="fn">max</span>(<span class="num">10</span>),
+  ai_summary: z.<span class="fn">string</span>().<span class="fn">min</span>(<span class="num">10</span>),
+});</code></pre>
+
+      <p>
+        אם Gemini מחזיר <code>category</code> שאינו ב-enum המותר, Zod זורק.
+        בלוק ה-catch שומר fallback גולמי. מסד הנתונים לעולם אינו מקבל כתבה לא מסווגת
+        או פגומה. זו הערבות המרכזית: <strong>סכמת ה-DB היא החוזה, Zod הוא המאכף</strong>.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>מה Zod תופס</th>
+            <th>דוגמת כשל AI</th>
+            <th>ללא Zod</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>קטגוריה לא חוקית</td>
+            <td>AI מחזיר <code>"Sports News"</code> במקום <code>"חדשות בעולם הספורט"</code></td>
+            <td>כתבה נשמרת עם קטגוריה שגויה, מופיעה בטאב הלא נכון</td>
+          </tr>
+          <tr>
+            <td>ציון מחוץ לטווח</td>
+            <td>AI מחזיר <code>relevance_score: 11</code> או <code>0</code></td>
+            <td>תג ה-UI מציג "11/10" או ריק; לוגיקת המיון נשברת</td>
+          </tr>
+          <tr>
+            <td>תקציר ריק</td>
+            <td>AI מחזיר <code>ai_summary: ""</code> או מחסיר את השדה</td>
+            <td>כרטיס הכתבה מציג תקציר ריק; המודל מציג כלום בבלוק התוכן</td>
+          </tr>
+          <tr>
+            <td>שדות נוספים</td>
+            <td>הלוצינציות AI מוסיפות <code>"confidence": 0.9</code> ל-JSON</td>
+            <td>שדה נוסף מתעלם בשקט ב-JS, אך מאותת על סחרור ב-prompt</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 id="s5-schema">עיצוב סכמת מסד הנתונים</h3>
+<pre><code>CREATE TABLE IF NOT EXISTS articles (
+  id              TEXT PRIMARY KEY,           <span class="cmt">-- UUID v4</span>
+  original_url    TEXT NOT NULL UNIQUE,       <span class="cmt">-- מפתח מניעת כפילויות</span>
+  title           TEXT NOT NULL,
+  image_url       TEXT,                       <span class="cmt">-- nullable: SVG fallback בפרונטאנד</span>
+  category        TEXT NOT NULL DEFAULT <span class="str">'Uncategorised'</span>,  <span class="cmt">-- ערך בעברית</span>
+  sub_category    TEXT NOT NULL DEFAULT <span class="str">'Uncategorised'</span>,  <span class="cmt">-- קבוע באנגלית</span>
+  source_name     TEXT NOT NULL DEFAULT <span class="str">''</span>,
+  tag             TEXT NOT NULL DEFAULT <span class="str">'General'</span>,
+  relevance_score INTEGER NOT NULL DEFAULT 0,
+  ai_summary      TEXT NOT NULL DEFAULT <span class="str">''</span>,
+  created_at      TEXT NOT NULL DEFAULT (strftime(<span class="str">'%Y-%m-%dT%H:%M:%fZ'</span>, <span class="str">'now'</span>))
+);
+
+<span class="cmt">-- אינדקס על תבנית השאילתא הנפוצה ביותר</span>
+CREATE INDEX IF NOT EXISTS idx_articles_sub_category_created
+  ON articles (sub_category, created_at);</code></pre>
+
+      <p>
+        האינדקס המורכב על <code>(sub_category, created_at)</code> הוא אבן הביצועים
+        של כל שאילתת API. הפרונטאנד תמיד מסנן לפי קטגוריה או תת-קטגוריה,
+        ממוין לפי זמן. בלי אינדקס זה, SQLite יבצע סריקת טבלה מלאה
+        בכל טעינת עמוד.
+      </p>
+
+      <h4>תבנית מיגרציית סכמה</h4>
+      <p>
+        ל-SQLite אין <code>ALTER TABLE ... ADD COLUMN IF NOT EXISTS</code>. כשצריך עמודה חדשה,
+        הגישה האידיומטית הבטוחה היא try/catch סביב ה-ALTER:
+      </p>
+<pre><code><span class="cmt">// רץ בכל הפעלה — בטוח לקרוא פעמים רבות</span>
+<span class="kw">try</span> {
+  db.<span class="fn">exec</span>(<span class="str">`ALTER TABLE articles ADD COLUMN source_name TEXT NOT NULL DEFAULT ''`</span>);
+} <span class="kw">catch</span> {
+  <span class="cmt">// העמודה כבר קיימת — SQLite זורק, אנחנו מתעלמים</span>
+}</code></pre>
+
+      <p>
+        למיגרציות נתונים (שינוי שמות ערכים בשורות קיימות), נעשה שימוש במשפטי UPDATE פשוטים —
+        הם אידמפוטנטיים באופן טבעי מכיוון שאחרי הריצה הראשונה, אין שורות שתואמות את
+        תנאי <code>WHERE</code> הישן:
+      </p>
+<pre><code>db.<span class="fn">exec</span>(<span class="str">`
+  UPDATE articles SET sub_category = 'NATIONAL' WHERE sub_category = 'NATIONAL-MONDIAL';
+  UPDATE articles SET sub_category = 'FOOTBALL' WHERE sub_category = 'PREMIER-LEAGUE';
+  UPDATE articles SET sub_category = 'FOOTBALL' WHERE sub_category = 'TRANSFERS';
+`</span>);</code></pre>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 6
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section-block" id="s6">
+      <div class="section-num">פרק 06</div>
+      <h2 class="section-title"><span class="green">תחזוקה</span> ועמידות לעתיד</h2>
+
+      <h3 id="s6-feed">איך להוסיף פיד RSS חדש — שלב אחרי שלב</h3>
+
+      <ol class="step-list">
+        <li>
+          <div>
+            <strong>החליט על הקטגוריה ותת-הקטגוריה.</strong>
+            עיין ב-<code>CATEGORY_MAP</code> ב-<code>frontend/src/App.jsx</code> לחמשת שמות
+            הקטגוריות האנגליים החוקיים, וב-<code>CATEGORY_SUB_OPTIONS</code> לקבועי
+            תת-הקטגוריה החוקיים. אם צריך תת-קטגוריה חדשה, חייב להוסיף אותה גם
+            ל-<code>CATEGORY_SUB_OPTIONS</code> (פרונטאנד) וגם ל-<code>SUB_CATEGORY_LABELS</code>
+            (ArticleCard.jsx), ואופציונלית להוסיף ויזואל fallback ל-<code>SUB_CATEGORY_FALLBACK</code>.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>מצא או בנה את כתובת ה-RSS.</strong>
+            לרוב אתרי החדשות יש נקודת קצה <code>/feed</code>, <code>/rss</code>, או <code>/rss.xml</code>.
+            אם האתר חוסם RSS ישיר או אין לו פיד, השתמש ב-FetchRSS.com כדי לייצר
+            כתובת פיד מדוממת. בדוק את הכתובת בדפדפן או עם <code>curl</code> תחילה.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>הוסף את הגדרת הפיד ל-<code>RSS_FEEDS</code> ב-<code>rss.service.js</code>:</strong>
+<pre><code>{
+  url:             <span class="str">'https://example.com/rss.xml'</span>,
+  source_name:     <span class="str">'המקור שלי'</span>,         <span class="cmt">// מוצג בכרטיסי UI ובמודלים</span>
+  forceCategory:   <span class="str">'AI & Tech'</span>,         <span class="cmt">// חייב להתאים ל-CATEGORY_MAP בדיוק</span>
+  forceSubCategory:<span class="str">'GADGETS-LEAKS'</span>,     <span class="cmt">// חייב להתאים ל-CATEGORY_SUB_OPTIONS</span>
+  forceTag:        <span class="str">'#גאדגטים'</span>,          <span class="cmt">// האשטאג עברי שמוצג על כרטיס הכתבה</span>
+  isHebrew:        <span class="kw">true</span>,               <span class="cmt">// אופציונלי: מדלג על רמז תרגום ב-prompt</span>
+}</code></pre>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>בדוק במצב Turbo תחילה.</strong>
+            הגדר <code>ENABLE_AI_AGENT=false</code> ב-Render, טריגר אחזור ידני דרך
+            <code>POST /api/trigger-fetch</code>, ואמת שכתבות מהמקור החדש
+            מופיעות בטאב ה-UI הנכון. חזור למצב AI רק לאחר שהפיד אושר.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>בצע commit ו-push.</strong>
+            Vercel וגם Render יפרסו אוטומטית. אם תת-הקטגוריה חדשה, הפרונטאנד
+            נפרס ראשון (כפתור חדש מופיע ב-UI) — כתבות עלולות להופיע עם עיכוב קל
+            בזמן ש-Render מופעל מחדש וה-cron הראשון מופעל.
+          </div>
+        </li>
+      </ol>
+
+      <h3 id="s6-logs">איך לקרוא לוגים ב-Render לאבחון תקלות</h3>
+
+      <p>
+        כל הלוגים מובנים עם תג קידומת בסוגריים מרובעים. הבנת הקידומת
+        מיד אומרת לך איזה סוכן מדבר:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>קידומת לוג</th>
+            <th>משמעות</th>
+            <th>דוגמה</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>[rss] ✓</code></td>
+            <td>פיד אוחזר בהצלחה</td>
+            <td><code>[rss] ✓ Fetched 12 items from BBC Sport</code></td>
+          </tr>
+          <tr>
+            <td><code>[rss] ✗</code></td>
+            <td>אחזור פיד נכשל (שגיאת רשת, כתובת פגויה)</td>
+            <td><code>[rss] ✗ Feed fetch failed — url=... | ECONNREFUSED</code></td>
+          </tr>
+          <tr>
+            <td><code>[ai]  ⟳</code></td>
+            <td>קריאת Gemini מתחילה לכתבה זו</td>
+            <td><code>[ai]  ⟳ Categorizing: "ברצלונה חותמת..."</code></td>
+          </tr>
+          <tr>
+            <td><code>[ai]  ⏳</code></td>
+            <td>פגע במגבלת RPM — ממתין לעיכוב ניסיון חוזר</td>
+            <td><code>[ai]  ⏳ RPM limit — waiting 62s then retrying...</code></td>
+          </tr>
+          <tr>
+            <td><code>[ai]  ⚡</code></td>
+            <td>קצבה תשושה — מפסק-קצבה הופעל</td>
+            <td><code>[ai]  ⚡ QUOTA EXHAUSTED — switching to Turbo mode...</code></td>
+          </tr>
+          <tr>
+            <td><code>[ai]  ⚠</code></td>
+            <td>שגיאת AI שאינה קצבה — שומר fallback גולמי</td>
+            <td><code>[ai]  ⚠ Error — saving raw fallback for "..." | Zod: ...</code></td>
+          </tr>
+          <tr>
+            <td><code>[db]  ✓ 🖼 [AI]</code></td>
+            <td>כתבה הוכנסה עם תקציר AI + תמונה נמצאה</td>
+            <td><code>[db]  ✓ 🖼 [AI] "חזרתו של מסי..." (score=9)</code></td>
+          </tr>
+          <tr>
+            <td><code>[db]  ✓ — [AI]</code></td>
+            <td>כתבה הוכנסה עם תקציר AI, ללא תמונה</td>
+            <td><code>[db]  ✓ — [AI] "ניתוח WSJ..." (score=7)</code></td>
+          </tr>
+          <tr>
+            <td><code>[db]  ✓ [TURBO]</code></td>
+            <td>כתבה הוכנסה במצב Turbo (ללא AI)</td>
+            <td><code>[db]  ✓ 🖼 [TURBO] "TechCrunch: OpenAI..."</code></td>
+          </tr>
+          <tr>
+            <td><code>[db]  ✓ [QUOTA-TURBO]</code></td>
+            <td>כתבה הוכנסה אחרי פגיעת קצבה (fallback באמצע ריצה)</td>
+            <td><code>[db]  ✓ — [QUOTA-TURBO] "Sky Sports..."</code></td>
+          </tr>
+          <tr>
+            <td><code>[db]  ↩</code></td>
+            <td>fallback גולמי נשמר אחרי שגיאה</td>
+            <td><code>[db]  ↩ Raw fallback saved "כותרת הכתבה..."</code></td>
+          </tr>
+          <tr>
+            <td><code>[db]  ✗</code></td>
+            <td>הכנסת DB נכשלה (קריטי — חקור)</td>
+            <td><code>[db]  ✗ Fallback insert failed — SQLITE_BUSY</code></td>
+          </tr>
+          <tr>
+            <td><code>[rss] ═══ Run complete</code></td>
+            <td>האצווה הסתיימה — שורת סיכום</td>
+            <td><code>[rss] ═══ Run complete — processed=14 skipped=38 errors=0</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout warning">
+        <span class="icon">🔍</span>
+        <span>
+          <strong>אבחון ריצה ללא כתבות:</strong> חפש את שורת הסיכום האחרונה.
+          אם <code>skipped</code> גבוה ו-<code>processed</code> הוא 0, ל-DB כבר יש את כל
+          הכתבות האלה — זו התנהגות תקינה (אידמפוטנטיות). אם <code>errors</code> גבוה,
+          חפש שורות <code>[rss] ✗</code> — פידים נכשלים לאחזר.
+          אם אתה רואה <code>⚡ QUOTA EXHAUSTED</code>, הגדר <code>ENABLE_AI_AGENT=false</code>
+          לשעה הבאה, ואז החזר ל-<code>true</code> לאחר שקצבת Gemini מתאפסת.
+        </span>
+      </div>
+
+      <h3 id="s6-apply">יישום כללי ממשל אלה בפרויקטים חדשים</h3>
+
+      <p>
+        SocialOrg ביסס סט תבניות ארכיטקטורה שחלות על כל צינור מבוסס LLM.
+        הנה רשימת הבדיקה המזוקקת:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>כלל ממשל</th>
+            <th>איך ליישם בכל פרויקט</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>לעולם אל תסמוך על פלט גולמי מ-LLM</strong></td>
+            <td>תמיד נתח JSON + אמת עם ספריית סכמה (Zod, Pydantic וכו') לפני שמירה.
+            התייחס ל-LLM כ-API חיצוני לא מהימן — בדיוק כפי שתאמת קלט משתמש.</td>
+          </tr>
+          <tr>
+            <td><strong>עיבוד טורי + מבודד</strong></td>
+            <td>לצינורות אצווה שקוראים ל-API עם הגבלת קצב, השתמש בלולאות טוריות
+            עם try/catch לכל פריט. לעולם אל תשתמש ב-Promise.all — API עם הגבלת קצב
+            ועיבוד מקבילי אינם תואמים.</td>
+          </tr>
+          <tr>
+            <td><strong>מפסק-קצבה לכל ריצה</strong></td>
+            <td>הצהר על דגלי קצבה בתוך פונקציית האצווה, לא בהיקף המודול.
+            כשה-API מאותת על תשישות, הפסק לקרוא לו והשלם את האצווה באמצעות נתיב fallback.
+            אפס בהפעלה הבאה.</td>
+          </tr>
+          <tr>
+            <td><strong>מניעת כפילויות לפני קריאות LLM</strong></td>
+            <td>תמיד בדוק רשומות קיימות לפני קריאת ה-AI. מונע תשלום כפול
+            על אותו תוכן והופך את הצינור לאידמפוטנטי — בטוח לנסות שוב בכל עת.</td>
+          </tr>
+          <tr>
+            <td><strong>עקיפה קשה מעל סיווג AI</strong></td>
+            <td>למטא-דאטה שאתה שולט בה (קטגוריות, תגיות, מקורות), קודד אותה קשה
+            כעקיפות בהגדרות הצינור שלך. לעולם אל תתן ל-AI להקצות שדות סיווג קריטיים
+            ללא בדיקה קשה.</td>
+          </tr>
+          <tr>
+            <td><strong>מתג מצב דרך משתנה סביבה</strong></td>
+            <td>הוסף מתג בסגנון <code>ENABLE_AI</code> מהיום הראשון. כשה-API שובר
+            או הקצבה תשושה, אתה צריך להיות מסוגל להמשיך להריץ את המערכת ללא פריסת קוד.</td>
+          </tr>
+          <tr>
+            <td><strong>לוגים מובנים עם קידומות</strong></td>
+            <td>תייג כל שורת לוג עם קידומת מודול (<code>[rss]</code>, <code>[ai]</code>, <code>[db]</code>)
+            וסמל חומרה. בצופה לוגים מאורח כמו Render, אתה יכול לסנן לפי קידומת
+            כדי לבודד מיידית את השכבה שנכשלה.</td>
+          </tr>
+          <tr>
+            <td><strong>Prompt דטרמיניסטי</strong></td>
+            <td>הגדר <code>temperature: 0.1</code> או נמוך יותר למשימות מובנות. טמפרטורה גבוהה
+            היא למשימות יצירתיות; סיווג וסיכום צריכים להיות כמעט דטרמיניסטיים.
+            ציין דרישות פורמט פלט מדויקות; לעולם אל תשתמש בהוראות מעורפלות כמו "היה תמציתי".</td>
+          </tr>
+          <tr>
+            <td><strong>גיזום FIFO לאחסון מוגבל</strong></td>
+            <td>בכל מערכת עם קליטה רציפה, הוסף מגבלת שורות-מקסימום-למחיצה שנאכפת
+            בכל הכנסה. בלעדיה, האחסון גדל ללא גבול וכתבות ישנות ממקורות גדולים
+            דוחקות החוצה קטנות יותר.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout success">
+        <span class="icon">🎯</span>
+        <span>
+          העקרון-על מאחורי כל הכללים האלה: <strong>עצב את מקרה הכשל ראשון,
+          מקרה ההצלחה שני.</strong> צינור שעובד כשהכל בסדר קל לכתוב. צינור שמתאושש
+          בחן כשGemini למטה, הפיד פגום, ומסד הנתונים איטי — זה דורש בחירות
+          ארכיטקטוניות מכוונות שנעשות מראש. כל מנגנון ב-SocialOrg נוסף
+          בתגובה למצב כשל אמיתי, לא תיאורטי.
+        </span>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <p style="font-size: 12px; color: var(--text-3); text-align: center; padding-bottom: 20px; border-top: 1px solid var(--border); padding-top: 24px;">
+      מדריך הנדסת מערכות SocialOrg &nbsp;·&nbsp; נוצר 2026 &nbsp;·&nbsp;
+      עדכון ארכיטקטורה אחרון: ענף master, קומיט <code style="background:var(--code-bg);border:1px solid var(--border-2);padding:1px 6px;border-radius:4px;font-size:11px;color:var(--accent);font-family:monospace">27c6820</code>
+    </p>
+
+  </main>
+</div>
+</body>
+</html>
