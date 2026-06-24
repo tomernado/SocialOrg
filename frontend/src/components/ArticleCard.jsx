@@ -248,8 +248,13 @@ export default function ArticleCard({ article, index = 0 }) {
       onMouseEnter={e => { e.currentTarget.style.border = '1px solid var(--border-mid)'; e.currentTarget.style.background = 'var(--card-hover)'; }}
       onMouseLeave={e => { e.currentTarget.style.border = '1px solid var(--border)'; e.currentTarget.style.background = 'var(--card)'; }}
     >
-      {/* ── Image / Fallback area ── */}
-      <div className="relative w-full h-48 overflow-hidden">
+      {/* ── Image / Fallback area — clickable to open modal ── */}
+      <div
+        className="relative w-full h-48 overflow-hidden cursor-pointer"
+        onClick={() => setModalOpen(true)}
+        role="button"
+        aria-label="קרא עוד"
+      >
         {image_url && !imgError ? (
           <img
             src={image_url}
@@ -331,12 +336,12 @@ export default function ArticleCard({ article, index = 0 }) {
           {title}
         </h2>
 
-        {/* AI summary — RTL, never clipped mid-sentence (Gemini returns 2 complete sentences) */}
         {ai_summary && (
           <p
-            className="font-body text-[12.5px] leading-relaxed" style={{ color: 'var(--text-2)' }}
+            className="font-body text-[12.5px] leading-relaxed"
             dir="rtl"
             style={{
+              color: 'var(--text-2)',
               display: '-webkit-box',
               WebkitLineClamp: 3,
               WebkitBoxOrient: 'vertical',

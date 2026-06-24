@@ -1,35 +1,6 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
-// ---------------------------------------------------------------------------
-// Domains that send X-Frame-Options: DENY or equivalent.
-// Articles from these sources will show the Preview View instead of an iframe.
-// Add new entries here whenever a source is confirmed to block framing.
-// ---------------------------------------------------------------------------
-const RESTRICTED_DOMAINS = [
-  't.me',
-  'telegram.me',
-  'bbc.co.uk',
-  'bbci.co.uk',
-  'bbc.com',
-  'skysports.com',
-  'fifa.com',
-  'onefootball.com',
-  'theathletic.com',
-  'goal.com',
-];
-
-function isDomainRestricted(url) {
-  try {
-    const { hostname } = new URL(url);
-    return RESTRICTED_DOMAINS.some(
-      (d) => hostname === d || hostname.endsWith('.' + d)
-    );
-  } catch {
-    return true; // invalid URL → treat as restricted (safe default)
-  }
-}
-
 // Accent colours matching ArticleCard's palette
 const CATEGORY_ACCENT = {
   'עולם ה-AI והפיתוח':          '#00d4ff',
@@ -100,20 +71,21 @@ function ModalHeader({ article, accent, onClose }) {
 function PreviewView({ article, accent }) {
   const fallback = CATEGORY_FALLBACK_GRADIENT[article.category] ?? 'linear-gradient(135deg, #0c0c0e, #141416)';
 
+  const dateStr = article.created_at
+    ? new Date(article.created_at).toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null;
+
   return (
     <div className="flex-1 overflow-y-auto bg-[#0c0c0e]">
       <div className="max-w-2xl mx-auto px-6 py-8 flex flex-col gap-6">
 
         {/* Article image */}
-        <div
-          className="w-full rounded-2xl overflow-hidden"
-          style={{ aspectRatio: '16/9' }}
-        >
+        <div className="w-full rounded-2xl overflow-hidden" style={{ aspectRatio: '16/9' }}>
           {article.image_url ? (
             <img
               src={article.image_url}
               alt={article.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-top"
             />
           ) : (
             <div
@@ -131,36 +103,76 @@ function PreviewView({ article, accent }) {
           )}
         </div>
 
-        {/* Source name badge */}
-        {article.source_name && (
-          <span
-            className="self-start text-[11px] font-700 tracking-wide px-3 py-1 rounded-full font-body"
-            style={{ color: accent, backgroundColor: `${accent}20`, border: `1px solid ${accent}40` }}
-          >
-            {article.source_name}
-          </span>
-        )}
+        {/* Source + metadata row */}
+        <div className="flex items-center gap-2 flex-wrap" dir="rtl">
+          {article.source_name && (
+            <span
+              className="text-[11px] font-700 tracking-wide px-3 py-1 rounded-full font-body"
+              style={{ color: accent, backgroundColor: `${accent}20`, border: `1px solid ${accent}40` }}
+            >
+              {article.source_name}
+            </span>
+          )}
+          {article.tag && (
+            <span className="text-[11px] font-body text-[#555560] px-2 py-1 rounded-full bg-[#1a1a1f]">
+              {article.tag}
+            </span>
+          )}
+          {dateStr && (
+            <span className="text-[11px] font-body text-[#444450]">{dateStr}</span>
+          )}
+          {article.relevance_score > 0 && (
+            <span
+              className="text-[11px] font-body font-bold mr-auto"
+              style={{ color: accent }}
+            >
+              ★ {article.relevance_score}/10
+            </span>
+          )}
+        </div>
 
         {/* Title */}
         <h2
-          className="font-display text-[22px] font-800 text-white leading-snug"
+          className="font-display text-[23px] font-800 text-white leading-snug"
           dir="rtl"
         >
           {article.title}
         </h2>
 
-        {/* AI summary */}
+        {/* AI summary — styled block */}
         {article.ai_summary && (
-          <p
-            className="font-body text-[15px] text-[#9898b0] leading-relaxed"
-            dir="rtl"
+          <div
+            className="rounded-xl p-5 flex flex-col gap-3"
+            style={{
+              background: `${accent}08`,
+              borderRight: `3px solid ${accent}`,
+              borderLeft: 'none',
+            }}
           >
-            {article.ai_summary}
-          </p>
+            <div className="flex items-center gap-2" dir="rtl">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2">
+                <path d="M12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2z"/>
+                <path d="M12 8v4l3 3"/>
+              </svg>
+              <span className="text-[11px] font-bold font-body tracking-wider uppercase" style={{ color: accent }}>
+                תקציר AI
+              </span>
+            </div>
+            <p
+              className="font-body text-[15.5px] text-[#b8b8cc] leading-[1.85] tracking-wide"
+              dir="rtl"
+            >
+              {article.ai_summary}
+            </p>
+          </div>
         )}
 
-        {/* Divider */}
-        <div className="border-t border-[#222228]" />
+        {/* Divider with label */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1 border-t border-[#1e1e24]" />
+          <span className="text-[11px] text-[#333340] font-body">הכתבה המלאה</span>
+          <div className="flex-1 border-t border-[#1e1e24]" />
+        </div>
 
         {/* CTA button */}
         <a
@@ -188,40 +200,7 @@ function PreviewView({ article, accent }) {
 }
 
 // ---------------------------------------------------------------------------
-// Iframe View — shown for non-restricted domains
-// ---------------------------------------------------------------------------
-function IframeView({ article, accent }) {
-  return (
-    <div className="flex-1 relative bg-[#0c0c0e]">
-      {/* Behind-iframe fallback — visible only if iframe is blank/blocked */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center px-6">
-        <p className="text-[#444450] text-[13px] font-body" dir="rtl">
-          האתר חסם הצגה בתוך האפליקציה.
-        </p>
-        <a
-          href={article.original_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-4 py-2 rounded-lg text-[12px] font-700 font-body text-[#0c0c0e]
-                     transition-opacity hover:opacity-80"
-          style={{ backgroundColor: accent }}
-        >
-          פתח בחלון חדש
-        </a>
-      </div>
-
-      <iframe
-        src={article.original_url}
-        title={article.title}
-        className="absolute inset-0 w-full h-full border-0"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-      />
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Smart Modal — entry point
+// Smart Modal — always shows PreviewView; external link available in header
 // ---------------------------------------------------------------------------
 export default function ArticleModal({ article, onClose }) {
   useEffect(() => {
@@ -233,7 +212,6 @@ export default function ArticleModal({ article, onClose }) {
   if (!article) return null;
 
   const accent = CATEGORY_ACCENT[article.category] ?? '#00d4ff';
-  const restricted = isDomainRestricted(article.original_url);
 
   return createPortal(
     <div
@@ -241,11 +219,7 @@ export default function ArticleModal({ article, onClose }) {
       style={{ background: 'rgba(6,6,8,0.96)' }}
     >
       <ModalHeader article={article} accent={accent} onClose={onClose} />
-
-      {restricted
-        ? <PreviewView article={article} accent={accent} />
-        : <IframeView  article={article} accent={accent} />
-      }
+      <PreviewView article={article} accent={accent} />
     </div>,
     document.body
   );

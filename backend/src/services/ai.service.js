@@ -15,7 +15,7 @@ const model = genAI.getGenerativeModel({
   generationConfig: {
     responseMimeType: 'application/json',
     temperature: 0.1,
-    maxOutputTokens: 400, // JSON response is ~150-250 tokens; cap prevents truncation
+    maxOutputTokens: 550, // 3-sentence summary ~200-350 tokens in JSON (quota-aware)
   },
 });
 
@@ -135,10 +135,10 @@ function buildPrompt(title, content, forceSubCategory) {
 ${subCategoryInstruction}
 
 חוקי הסיכום (חובה לעמוד בהם):
-1. כתוב בדיוק 2 משפטים שלמים בעברית.
+1. כתוב בדיוק 3 משפטים שלמים בעברית — סיכום מפורט שמכסה: מה קרה, מי מעורב, ומה המשמעות.
 2. כל משפט חייב להסתיים בנקודה (.) או בסימן קריאה (!) או שאלה (?).
 3. אל תחתוך משפט באמצע — כל משפט חייב להיות שלם ומובן.
-4. הסיכום מיועד לכרטיס חדשות קטן — תמציתי וברור.
+4. הסיכום מיועד לחלון קריאה — מפורט ומעניין, לא רק כותרת מורחבת.
 
 פורמט JSON נדרש (ללא שדות נוספים):
 {
@@ -146,7 +146,7 @@ ${subCategoryInstruction}
   "sub_category": "<BARCELONA | NATIONAL-MONDIAL | FOOTBALL-NEWS>",
   "tag": "<האשטאג אחד רלוונטי בעברית, למשל: #ברצלונה>",
   "relevance_score": <מספר שלם 1-10>,
-  "ai_summary": "<משפט ראשון שלם. משפט שני שלם.>"
+  "ai_summary": "<משפט ראשון שלם. משפט שני שלם. משפט שלישי שלם.>"
 }
 
 ערכי category המותרים:
