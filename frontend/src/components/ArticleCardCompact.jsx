@@ -29,13 +29,28 @@ export default function ArticleCardCompact({ article }) {
     <>
       <button
         onClick={() => setModalOpen(true)}
-        className="flex items-center gap-3 w-[260px] h-[120px] bg-[#141416] border border-[#222228]
-                   rounded-xl overflow-hidden hover:border-[#333340] hover:bg-[#18181b]
-                   transition-all duration-200 text-left flex-shrink-0 px-3 group"
+        className="flex items-center gap-3 w-[240px] sm:w-[290px] h-[150px] sm:h-[165px]
+                   rounded-xl overflow-hidden text-left flex-shrink-0 px-3 group
+                   transition-all duration-300"
+        style={{
+          background: 'var(--card)',
+          border: `1px solid ${accent.color}60`,
+          boxShadow: `0 0 14px ${accent.color}30, 0 0 4px ${accent.color}20`,
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.border = `1px solid ${accent.color}99`;
+          e.currentTarget.style.boxShadow = `0 0 28px ${accent.color}55, 0 0 8px ${accent.color}35, inset 0 0 20px ${accent.color}10`;
+          e.currentTarget.style.background = 'var(--card-hover)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.border = `1px solid ${accent.color}60`;
+          e.currentTarget.style.boxShadow = `0 0 14px ${accent.color}30, 0 0 4px ${accent.color}20`;
+          e.currentTarget.style.background = 'var(--card)';
+        }}
       >
         {/* Thumbnail */}
         <div
-          className="w-[72px] h-[72px] rounded-lg overflow-hidden flex-shrink-0"
+          className="w-[86px] h-[86px] sm:w-[100px] sm:h-[100px] rounded-lg overflow-hidden flex-shrink-0"
           style={{
             background: showFallback
               ? `radial-gradient(ellipse at center, ${accent.color}35 0%, ${accent.bg} 100%)`
@@ -61,9 +76,9 @@ export default function ArticleCardCompact({ article }) {
             {source_name}
           </span>
           <p
-            className="text-[12.5px] font-bold text-white font-display leading-[1.3]
-                       group-hover:text-[#e8e8f0] transition-colors duration-150"
+            className="text-[12.5px] font-bold font-display leading-[1.3] transition-colors duration-150"
             style={{
+              color: 'var(--text)',
               display: '-webkit-box',
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
@@ -75,7 +90,7 @@ export default function ArticleCardCompact({ article }) {
           {tag && (
             <span
               className="text-[9px] font-medium font-body truncate"
-              style={{ color: `${accent.color}88` }}
+              style={{ color: 'var(--text-3)' }}
             >
               {tag}
             </span>

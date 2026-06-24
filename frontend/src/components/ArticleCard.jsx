@@ -112,9 +112,14 @@ export default function ArticleCard({ article, index = 0 }) {
 
   return (
     <article
-      className="fade-up bg-[#141416] border border-[#222228] rounded-xl overflow-hidden
-                 hover:border-[#333340] hover:bg-[#161618] transition-all duration-200 group"
-      style={{ animationDelay: `${index * 60}ms` }}
+      className="fade-up rounded-xl overflow-hidden transition-all duration-200 group"
+      style={{
+        animationDelay: `${index * 60}ms`,
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.border = '1px solid var(--border-mid)'; e.currentTarget.style.background = 'var(--card-hover)'; }}
+      onMouseLeave={e => { e.currentTarget.style.border = '1px solid var(--border)'; e.currentTarget.style.background = 'var(--card)'; }}
     >
       {/* ── Image / Fallback area ── */}
       <div className="relative w-full h-44 overflow-hidden">
@@ -151,7 +156,7 @@ export default function ArticleCard({ article, index = 0 }) {
           {/* Bottom fade */}
           <div
             className="absolute bottom-0 left-0 right-0 h-12"
-            style={{ background: 'linear-gradient(transparent, #141416)' }}
+            style={{ background: 'linear-gradient(transparent, var(--card))' }}
           />
         </div>
         )}
@@ -179,13 +184,13 @@ export default function ArticleCard({ article, index = 0 }) {
 
         {/* Title */}
         <h2
-          className="font-display text-[14.5px] font-bold leading-snug text-white
-                     group-hover:text-[#e8e8f0] transition-colors duration-150
-                     overflow-hidden"
+          className="font-display text-[14.5px] font-bold leading-snug transition-colors duration-150"
           style={{
+            color: 'var(--text)',
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
           }}
         >
           {title}
@@ -194,7 +199,7 @@ export default function ArticleCard({ article, index = 0 }) {
         {/* AI summary — RTL, never clipped mid-sentence (Gemini returns 2 complete sentences) */}
         {ai_summary && (
           <p
-            className="font-body text-[12.5px] text-[#8888a0] leading-relaxed"
+            className="font-body text-[12.5px] leading-relaxed" style={{ color: 'var(--text-2)' }}
             dir="rtl"
             style={{
               display: '-webkit-box',
@@ -208,7 +213,7 @@ export default function ArticleCard({ article, index = 0 }) {
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 mt-auto border-t border-[#222228]">
+        <div className="flex items-center justify-between pt-3 mt-auto" style={{ borderTop: '1px solid var(--border)' }}>
           <span
             className="text-[11px] font-medium font-body"
             style={{ color: `${accent.color}bb` }}

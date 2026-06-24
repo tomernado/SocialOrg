@@ -26,14 +26,14 @@ const CATEGORY_META = {
 
 function SkeletonCard() {
   return (
-    <div className="bg-[#141416] border border-[#222228] rounded-xl overflow-hidden animate-pulse">
-      <div className="w-full h-44 bg-[#1c1c20]" />
+    <div className="rounded-xl overflow-hidden animate-pulse" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
+      <div className="w-full h-44" style={{ background: 'var(--border)' }} />
       <div className="p-4 space-y-3">
-        <div className="h-3 w-16 bg-[#222228] rounded" />
-        <div className="h-4 w-full bg-[#222228] rounded" />
-        <div className="h-4 w-4/5 bg-[#222228] rounded" />
-        <div className="h-3 w-full bg-[#1c1c20] rounded mt-2" />
-        <div className="h-3 w-3/4 bg-[#1c1c20] rounded" />
+        <div className="h-3 w-16 rounded" style={{ background: 'var(--border)' }} />
+        <div className="h-4 w-full rounded" style={{ background: 'var(--border)' }} />
+        <div className="h-4 w-4/5 rounded" style={{ background: 'var(--border)' }} />
+        <div className="h-3 w-full rounded mt-2" style={{ background: 'var(--border-subtle)' }} />
+        <div className="h-3 w-3/4 rounded" style={{ background: 'var(--border-subtle)' }} />
       </div>
     </div>
   );
@@ -41,10 +41,18 @@ function SkeletonCard() {
 
 export default function App() {
   const [activeCategory, setActiveCategory]       = useState('Home');
-  const [activeSubCategory, setActiveSubCategory] = useState(null); // null = "הכל" (all)
+  const [activeSubCategory, setActiveSubCategory] = useState(null);
   const [articles, setArticles]                   = useState([]);
   const [loading, setLoading]                     = useState(true);
   const [error, setError]                         = useState(null);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') ?? 'dark');
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light', theme === 'light');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
   // Hardcoded sub-category options — must match forceSubCategory values in rss.service.js
   const CATEGORY_SUB_OPTIONS = {
@@ -99,19 +107,19 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0c0c0e] font-body">
+    <div className="min-h-screen font-body" style={{ background: 'var(--bg)' }}>
       <Sidebar activeCategory={activeCategory} onSelect={setActiveCategory} />
       <BottomNav activeCategory={activeCategory} onSelect={setActiveCategory} />
 
       <main className="lg:pl-[260px] min-h-screen flex flex-col pb-16 lg:pb-0">
 
         {activeCategory === 'Home' ? (
-          <HomeDashboard onSelect={setActiveCategory} />
+          <HomeDashboard onSelect={setActiveCategory} theme={theme} onToggleTheme={toggleTheme} />
         ) : (
           <>
             {/* ── Sticky top: main header + sub-navbar ── */}
             <div className="sticky top-0 z-20">
-              <header className="bg-[#0c0c0e]/90 backdrop-blur-md border-b border-[#222228]">
+              <header className="backdrop-blur-md border-b" style={{ background: 'color-mix(in srgb, var(--bg) 90%, transparent)', borderColor: 'var(--border)' }}>
                 <div className="px-6 lg:px-8 py-4 flex items-start gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3">

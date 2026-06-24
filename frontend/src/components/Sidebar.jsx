@@ -67,12 +67,12 @@ const NAV_ITEMS = [
 export default function Sidebar({ activeCategory, onSelect }) {
   return (
     <aside
-      className="hidden lg:flex flex-col fixed top-0 left-0 h-full w-[260px] z-40
-                 bg-[#0c0c0e] border-r border-[#222228]"
+      className="hidden lg:flex flex-col fixed top-0 left-0 h-full w-[260px] z-40"
+      style={{ background: 'var(--surface)', borderRight: '1px solid var(--border)' }}
     >
       <nav className="flex flex-col h-full">
         {/* Logo */}
-        <div className="px-6 py-7 border-b border-[#222228]">
+        <div className="px-6 py-7" style={{ borderBottom: '1px solid var(--border)' }}>
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded bg-gradient-to-br from-[#00d4ff] to-[#a78bfa] opacity-90" />
             <span className="font-display text-[17px] font-bold tracking-tight text-white">
@@ -99,14 +99,13 @@ export default function Sidebar({ activeCategory, onSelect }) {
               <li key={item.label}>
                 <button
                   onClick={() => onSelect(item.label)}
-                  className={`
-                    w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left
-                    transition-all duration-150 group
-                    ${isActive
-                      ? 'bg-[#1c1c20] text-white'
-                      : 'text-[#888893] hover:text-[#c8c8d0] hover:bg-[#141416]'
-                    }
-                  `}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-150 group"
+                  style={{
+                    background: isActive ? 'var(--card)' : 'transparent',
+                    color: isActive ? 'var(--text)' : 'var(--text-2)',
+                  }}
+                  onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = 'var(--card)'; e.currentTarget.style.color = 'var(--text)'; }}}
+                  onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-2)'; }}}
                 >
                   <span
                     className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-all duration-150"
@@ -142,7 +141,7 @@ export default function Sidebar({ activeCategory, onSelect }) {
         </ul>
 
         {/* Footer */}
-        <div className="px-6 py-5 border-t border-[#222228]">
+        <div className="px-6 py-5" style={{ borderTop: '1px solid var(--border)' }}>
           <p className="text-[11px] text-[#444450] font-body">
             Powered by Gemini · Free Tier
           </p>

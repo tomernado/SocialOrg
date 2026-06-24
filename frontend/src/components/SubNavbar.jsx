@@ -18,7 +18,7 @@ export default function SubNavbar({ options, activeSubCategory, onSelect, accent
   ];
 
   return (
-    <div className="border-b border-[#222228] bg-[#0c0c0e]/95 backdrop-blur-md">
+    <div className="backdrop-blur-md" style={{ borderBottom: '1px solid var(--border)', background: 'color-mix(in srgb, var(--bg) 95%, transparent)' }}>
       <div className="px-6 lg:px-8 py-2 flex items-center gap-2 overflow-x-auto scrollbar-none">
         {pills.map(({ label, value }) => {
           const isActive = activeSubCategory === value;
@@ -26,15 +26,11 @@ export default function SubNavbar({ options, activeSubCategory, onSelect, accent
             <button
               key={label}
               onClick={() => onSelect(value)}
-              className={`
-                flex-shrink-0 px-3 py-1 rounded-full text-[11.5px] font-bold font-body
-                tracking-wide transition-all duration-150 whitespace-nowrap border
-                ${isActive
-                  ? 'text-[#0c0c0e] border-transparent'
-                  : 'text-[#666674] border-[#222228] hover:text-[#c0c0cc] hover:border-[#333340]'
-                }
-              `}
-              style={isActive ? { backgroundColor: accent, borderColor: accent } : {}}
+              className="flex-shrink-0 px-3 py-1 rounded-full text-[11.5px] font-bold font-body tracking-wide transition-all duration-150 whitespace-nowrap border"
+              style={isActive
+                ? { backgroundColor: accent, borderColor: accent, color: '#0a0a0c' }
+                : { color: 'var(--text-3)', borderColor: 'var(--border)', background: 'transparent' }
+              }
             >
               {label}
             </button>
