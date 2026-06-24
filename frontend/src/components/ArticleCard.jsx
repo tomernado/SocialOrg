@@ -44,11 +44,11 @@ const DEFAULT_ACCENT = { color: '#888893', bg: '#88889318' };
 const CATEGORY_FALLBACK = {
   'עולם ה-AI והפיתוח': {
     gradient: 'linear-gradient(135deg, #020d1a 0%, #041830 60%, #060e20 100%)',
-    glow: 'radial-gradient(ellipse at 25% 45%, #00d4ff28 0%, transparent 65%)',
+    glow: 'radial-gradient(ellipse at 25% 45%, #00d4ff30 0%, transparent 60%)',
     icon: (
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" strokeWidth="1" opacity="0.4">
-        <rect x="4" y="4" width="16" height="16" rx="2"/>
-        <circle cx="12" cy="12" r="3"/>
+      <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" strokeWidth="1.4" opacity="0.65">
+        <rect x="4" y="4" width="16" height="16" rx="2" fill="#00d4ff08"/>
+        <circle cx="12" cy="12" r="3" fill="#00d4ff18"/>
         <line x1="12" y1="4" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="20"/>
         <line x1="4" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="20" y2="12"/>
         <line x1="6.3" y1="6.3" x2="9.2" y2="9.2"/><line x1="14.8" y1="14.8" x2="17.7" y2="17.7"/>
@@ -58,10 +58,10 @@ const CATEGORY_FALLBACK = {
   },
   'חדשות בעולם הספורט': {
     gradient: 'linear-gradient(135deg, #120800 0%, #1f0e00 60%, #130900 100%)',
-    glow: 'radial-gradient(ellipse at 70% 40%, #ff6b3525 0%, transparent 65%)',
+    glow: 'radial-gradient(ellipse at 70% 40%, #ff6b3530 0%, transparent 60%)',
     icon: (
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" strokeWidth="1" opacity="0.4">
-        <circle cx="12" cy="12" r="9"/>
+      <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" strokeWidth="1.4" opacity="0.65">
+        <circle cx="12" cy="12" r="9" fill="#ff6b3508"/>
         <path d="M12 3v18M3 12h18"/>
         <path d="M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/>
       </svg>
@@ -69,31 +69,31 @@ const CATEGORY_FALLBACK = {
   },
   'חדשות בעולם הכדורגל': {
     gradient: 'linear-gradient(135deg, #010f04 0%, #021a07 60%, #010c03 100%)',
-    glow: 'radial-gradient(ellipse at 30% 60%, #4ade8022 0%, transparent 65%)',
+    glow: 'radial-gradient(ellipse at 30% 60%, #4ade8028 0%, transparent 60%)',
     icon: (
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="1" opacity="0.4">
-        <circle cx="12" cy="12" r="9"/>
-        <path d="M12 7l2.5 3.5L18 11l-2.5 3 .5 4L12 16.5 8 18l.5-4L6 11l3.5-.5z"/>
+      <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="1.4" opacity="0.65">
+        <circle cx="12" cy="12" r="9" fill="#4ade8008"/>
+        <path d="M12 7l2.5 3.5L18 11l-2.5 3 .5 4L12 16.5 8 18l.5-4L6 11l3.5-.5z" fill="#4ade8018"/>
       </svg>
     ),
   },
   'חדשות כלליות בעולם הבידור': {
     gradient: 'linear-gradient(135deg, #120900 0%, #1f1100 60%, #120900 100%)',
-    glow: 'radial-gradient(ellipse at 60% 35%, #f59e0b22 0%, transparent 65%)',
+    glow: 'radial-gradient(ellipse at 60% 35%, #f59e0b28 0%, transparent 60%)',
     icon: (
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1" opacity="0.4">
-        <polygon points="23 7 16 12 23 17 23 7"/>
-        <rect x="1" y="5" width="15" height="14" rx="2"/>
+      <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.4" opacity="0.65">
+        <polygon points="23 7 16 12 23 17 23 7" fill="#f59e0b18"/>
+        <rect x="1" y="5" width="15" height="14" rx="2" fill="#f59e0b08"/>
       </svg>
     ),
   },
   'חדשות כלליות בעולם': {
     gradient: 'linear-gradient(135deg, #08030f 0%, #120620 60%, #080310 100%)',
-    glow: 'radial-gradient(ellipse at 40% 50%, #a78bfa22 0%, transparent 65%)',
+    glow: 'radial-gradient(ellipse at 40% 50%, #a78bfa28 0%, transparent 60%)',
     icon: (
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="1" opacity="0.4">
-        <circle cx="12" cy="12" r="9"/>
-        <path d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9z"/>
+      <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="1.4" opacity="0.65">
+        <circle cx="12" cy="12" r="9" fill="#a78bfa08"/>
+        <path d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9z" fill="#a78bfa10"/>
         <line x1="3" y1="12" x2="21" y2="12"/>
       </svg>
     ),
@@ -101,8 +101,9 @@ const CATEGORY_FALLBACK = {
 };
 
 // Sub-category overrides — take priority over CATEGORY_FALLBACK when a more
-// specific visual exists (e.g. Barcelona crest instead of the generic football icon).
+// specific visual exists for a sub-category.
 const SUB_CATEGORY_FALLBACK = {
+  // ── Football ────────────────────────────────────────────────────────────────
   'BARCELONA': {
     gradient: 'linear-gradient(135deg, #06001a 0%, #13003a 55%, #06001a 100%)',
     glow: 'radial-gradient(ellipse at 35% 55%, #a5004440 0%, transparent 55%), radial-gradient(ellipse at 65% 40%, #00458840 0%, transparent 55%)',
@@ -113,6 +114,58 @@ const SUB_CATEGORY_FALLBACK = {
         style={{ width: '72px', height: '72px', objectFit: 'contain', opacity: 0.9 }}
         onError={(e) => { e.currentTarget.style.display = 'none'; }}
       />
+    ),
+  },
+
+  // ── AI & Tech ───────────────────────────────────────────────────────────────
+  'AI-NEWS': {
+    gradient: 'linear-gradient(135deg, #020c18 0%, #031520 60%, #020d1c 100%)',
+    glow: 'radial-gradient(ellipse at 50% 50%, #00d4ff38 0%, transparent 60%)',
+    icon: (
+      <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="12" fill="#00d4ff1e" stroke="#00d4ff" strokeWidth="2.5"/>
+        <circle cx="18" cy="26" r="6.5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="2" opacity="0.85"/>
+        <circle cx="82" cy="26" r="6.5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="2" opacity="0.85"/>
+        <circle cx="18" cy="74" r="6.5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="2" opacity="0.85"/>
+        <circle cx="82" cy="74" r="6.5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="2" opacity="0.85"/>
+        <circle cx="50" cy="12" r="5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="1.8" opacity="0.65"/>
+        <circle cx="50" cy="88" r="5" fill="#00d4ff12" stroke="#00d4ff" strokeWidth="1.8" opacity="0.65"/>
+        <line x1="24" y1="30" x2="42" y2="44" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
+        <line x1="76" y1="30" x2="58" y2="44" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
+        <line x1="24" y1="70" x2="42" y2="56" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
+        <line x1="76" y1="70" x2="58" y2="56" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
+        <line x1="50" y1="17" x2="50" y2="38" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
+        <line x1="50" y1="62" x2="50" y2="83" stroke="#00d4ff" strokeWidth="1.5" opacity="0.5"/>
+      </svg>
+    ),
+  },
+  'GADGETS-LEAKS': {
+    gradient: 'linear-gradient(135deg, #020c18 0%, #031a28 60%, #020d1c 100%)',
+    glow: 'radial-gradient(ellipse at 65% 35%, #00d4ff28 0%, transparent 60%)',
+    icon: (
+      <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
+        <rect x="5" y="2" width="14" height="20" rx="2.5" fill="#00d4ff10" stroke="#00d4ff" strokeWidth="1.4"/>
+        <rect x="8" y="5.5" width="8" height="11" rx="1" fill="#00d4ff1a" stroke="#00d4ff" strokeWidth="0.9"/>
+        <circle cx="12" cy="19" r="1.1" fill="#00d4ff" opacity="0.65"/>
+        <line x1="10" y1="3.8" x2="14" y2="3.8" stroke="#00d4ff" strokeWidth="1.3" strokeLinecap="round" opacity="0.55"/>
+        <line x1="9" y1="8"  x2="15" y2="8"  stroke="#00d4ff" strokeWidth="0.75" opacity="0.35"/>
+        <line x1="9" y1="10" x2="15" y2="10" stroke="#00d4ff" strokeWidth="0.75" opacity="0.35"/>
+        <line x1="9" y1="12" x2="13" y2="12" stroke="#00d4ff" strokeWidth="0.75" opacity="0.35"/>
+      </svg>
+    ),
+  },
+  'CYBER-TECH': {
+    gradient: 'linear-gradient(135deg, #020c18 0%, #041e32 60%, #020c18 100%)',
+    glow: 'radial-gradient(ellipse at 35% 45%, #00d4ff2e 0%, transparent 58%), radial-gradient(ellipse at 72% 68%, #00d4ff14 0%, transparent 50%)',
+    icon: (
+      <svg width="62" height="62" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L4 6v5c0 4.9 3.4 9.5 8 10.9 4.6-1.4 8-6 8-10.9V6L12 2z"
+              fill="#00d4ff14" stroke="#00d4ff" strokeWidth="1.35" strokeLinejoin="round"/>
+        <rect x="9.5" y="11.5" width="5" height="4.5" rx="0.9"
+              fill="#00d4ff1e" stroke="#00d4ff" strokeWidth="1.05"/>
+        <path d="M12 9a1.9 1.9 0 0 1 1.9 1.9V11.5H10.1V10.9A1.9 1.9 0 0 1 12 9z"
+              fill="#00d4ff10" stroke="#00d4ff" strokeWidth="1.05" strokeLinejoin="round"/>
+      </svg>
     ),
   },
 };

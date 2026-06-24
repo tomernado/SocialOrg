@@ -102,6 +102,14 @@ const RSS_FEEDS = [
     forceTag: '#ספורט_ארצי',
     isHebrew: true,
   },
+  {
+    url: 'https://www.sport5.co.il/rss.aspx',
+    source_name: 'Sport5',
+    forceCategory: 'Sports',
+    forceSubCategory: 'ISRAELI-SPORTS',
+    forceTag: '#ספורט_ארצי',
+    isHebrew: true,
+  },
 
   // ── BASKETBALL-NBA ─────────────────────────────────────────────────────────
   {
