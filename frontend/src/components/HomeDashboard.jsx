@@ -65,7 +65,14 @@ export default function HomeDashboard({ onSelect, theme, onToggleTheme }) {
       CATEGORIES.map((cat) =>
         fetch(`${API_BASE}/api/articles?category=${encodeURIComponent(cat.hebrewKey)}`)
           .then((r) => r.json())
-          .then((json) => ({ label: cat.label, articles: (json.data ?? []).slice(0, 10) }))
+          .then((json) => {
+            const all = json.data ?? [];
+            // Surface articles with images before no-image articles so every
+            // marquee strip always shows real thumbnails when they exist.
+            const withImg    = all.filter(a => a.image_url && a.image_url.trim() !== '');
+            const withoutImg = all.filter(a => !a.image_url || a.image_url.trim() === '');
+            return { label: cat.label, articles: [...withImg, ...withoutImg].slice(0, 10) };
+          })
           .catch(() => ({ label: cat.label, articles: [] }))
       )
     ).then((results) => {
